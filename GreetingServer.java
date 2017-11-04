@@ -5,9 +5,11 @@
 
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
 
 public class GreetingServer extends Thread{
-    private ServerSocket serverSocket;																																																							
+    private ServerSocket serverSocket;              
+    public static ArrayList threads = new ArrayList<ServerThread>();                                                                                                                                                                                                            
 
     public GreetingServer(int port) throws IOException{
         //binding a socket to a port
@@ -33,20 +35,8 @@ public class GreetingServer extends Thread{
 				System.out.println("Just connected to " + client.getRemoteSocketAddress());
 				ServerThread st = new ServerThread(client);
             	st.start();
-
-                //while(true){    
-                    /* Read data from the ClientSocket */
-                //    DataInputStream in = new DataInputStream(client.getInputStream());
-               //     System.out.println(in.readUTF()); //readUTF waits for input
-
-                //    DataOutputStream out = new DataOutputStream(client.getOutputStream());
-
-                    /* Send data to the ClientSocket */
-                //    out.writeUTF("Thank you for connecting to " + client.getLocalSocketAddress() + "\nGoodbye!");
-               // }
-                //client.close();
-                // connected = false;
-                //System.out.println("Server ended the connection to "+ client.getRemoteSocketAddress());
+                threads.add(st);
+                //sendAll("HELLLLOOOOOOOOs");
             }catch(SocketTimeoutException s){
                 System.out.println("Socket timed out!");
                 break;
@@ -58,6 +48,7 @@ public class GreetingServer extends Thread{
             }
         }
     }
+
     public static void main(String [] args){
         try{
             int port = Integer.parseInt(args[0]);
@@ -73,32 +64,49 @@ public class GreetingServer extends Thread{
                     "Insufficient arguments given.");
         }
     }
-}
 
-class ServerThread extends Thread{
+    class ServerThread extends Thread{
 
-	Socket client;
+    	Socket client;
+        String text;
 
-	public ServerThread(Socket s){
-		this.client = s;
-	}
-	
-	public void run(){
-		while(true){    
-                   
-        	try{ 
-					/* Read data from the ClientSocket */
-				DataInputStream in = new DataInputStream(client.getInputStream());
-            	System.out.println(in.readUTF()); //readUTF waits for input
+    	public ServerThread(Socket s){
+    		this.client = s;
+    	}
+    	
+    	public void run(){
+    		while(true){    
+                       
+            	try{ 
+    					/* Read data from the ClientSocket */
+    				DataInputStream in = new DataInputStream(client.getInputStream());
+                    text = in.readUTF();
+                	System.out.println(text); //readUTF waits for input
 
-            	DataOutputStream out = new DataOutputStream(client.getOutputStream());
+                	DataOutputStream out = new DataOutputStream(client.getOutputStream());
 
-                    /* Send data to the ClientSocket */
-            	out.writeUTF("Thank you for connecting to " + client.getLocalSocketAddress());
-			} catch(IOException e){
+                        /* Send data to the ClientSocket */
+                	out.writeUTF("Thank you for connecting to " + client.getLocalSocketAddress());
+                    sendAll(text);
+    			} catch(IOException e){
 
-			}
+    			}
+
+                
+            }
         }
+
+    }
+
+    public void sendAll(String msg) {
+        for(int i=0;i < threads.size(); i++) {
+            try {
+                ServerThread c = (ServerThread)threads.get(i);
+                DataOutputStream out2 = new DataOutputStream(c.client.getOutputStream());
+                out2.writeUTF(msg); 
+            } catch(IOException e){}
+
+        }
+    }
 }
 
-}
