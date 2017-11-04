@@ -28,7 +28,6 @@ public class GreetingServer extends Thread{
 
                 //Socket client = serverSocket.accept();
 
-				//accept then make thread
 				client = serverSocket.accept();
 				System.out.println("Just connected to " + client.getRemoteSocketAddress());
 				ServerThread st = new ServerThread(client);

@@ -26,7 +26,7 @@ public class GreetingClient{
             
 
             while(true){
-		message = scan.nextLine();
+			     message = scan.nextLine();
 
                 /* Send data to the ServerSocket */
                 OutputStream outToServer = server.getOutputStream();
