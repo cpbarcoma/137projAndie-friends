@@ -25,18 +25,11 @@ public class GreetingServer extends Thread{
 
                 /* Start accepting data from the ServerSocket */
                 //waits or accepts connection from client
-                Socket client;
-                //clientArray = new Socket[100]; // up to a hundred clients
-
-                //Socket client = serverSocket.accept();
-
-				//accept then make thread
-				client = serverSocket.accept();
+                Socket client = serverSocket.accept();
 				System.out.println("Just connected to " + client.getRemoteSocketAddress());
 				ServerThread st = new ServerThread(client);
             	st.start();
                 threads.add(st);
-                //sendAll("HELLLLOOOOOOOOs");
             }catch(SocketTimeoutException s){
                 System.out.println("Socket timed out!");
                 break;
@@ -78,16 +71,14 @@ public class GreetingServer extends Thread{
     		while(true){    
                        
             	try{ 
-    					/* Read data from the ClientSocket */
-    				DataInputStream in = new DataInputStream(client.getInputStream());
-                    text = in.readUTF();
-                	System.out.println(text); //readUTF waits for input
-
-                	DataOutputStream out = new DataOutputStream(client.getOutputStream());
-
-                        /* Send data to the ClientSocket */
-                	out.writeUTF("Thank you for connecting to " + client.getLocalSocketAddress());
-                    sendAll(text);
+                    DataInputStream in = new DataInputStream(client.getInputStream());
+                    this.text = in.readUTF();
+                    System.out.println(text); //readUTF waits for input
+                    for(int i=0;i < threads.size(); i++) {
+                        ServerThread c = (ServerThread)threads.get(i);
+                        DataOutputStream out = new DataOutputStream(c.client.getOutputStream());
+                        out.writeUTF(this.text);
+                    }
     			} catch(IOException e){
 
     			}
