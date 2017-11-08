@@ -21,6 +21,8 @@ public class GreetingClient{
             
 			//creating a new socket for client and binding it to a port
             Socket server = new Socket(serverName, port);
+            ClientThread cs = new ClientThread(server);
+            cs.start();
 
             System.out.println("Just connected to " + server.getRemoteSocketAddress());
             
@@ -33,10 +35,6 @@ public class GreetingClient{
                 DataOutputStream out = new DataOutputStream(outToServer);
                 out.writeUTF("Client " + server.getLocalSocketAddress()+" says: " +message);
 
-                /* Receive data from the ServerSocket */
-                InputStream inFromServer = server.getInputStream();
-                DataInputStream in = new DataInputStream(inFromServer);
-                System.out.println("Server says " + in.readUTF());
             }
 
 			//closing the socket of the client
@@ -47,6 +45,26 @@ public class GreetingClient{
             System.out.println("Cannot find (or disconnected from) Server");
         }catch(ArrayIndexOutOfBoundsException e){
             System.out.println("Usage: java GreetingClient <server ip> <port no.> '<your message to the server>'");
+        }
+    }
+
+    // Reads inputs from other clients
+    static class ClientThread extends Thread {
+        Socket server;
+
+        public ClientThread(Socket s) {
+            this.server = s;
+        }
+
+        public void run() {
+            while(true) {
+                try {
+                    /* Receive data from the ServerSocket */
+                    InputStream inFromServer = server.getInputStream();
+                    DataInputStream in = new DataInputStream(inFromServer);
+                    System.out.println("Server says " + in.readUTF());
+                } catch (IOException e) {}
+            }
         }
     }
 }
