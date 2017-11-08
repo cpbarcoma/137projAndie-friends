@@ -13,7 +13,7 @@ public class GreetingClient{
             String serverName = args[0]; //get IP address of server from first param
             int port = Integer.parseInt(args[1]); //get port from second param
             //String message = args[2]; //get message from the third param
-            String message;
+            String message, clientName;
             Scanner scan = new Scanner(System.in);
 
             /* Open a ClientSocket and connect to ServerSocket */
@@ -24,16 +24,23 @@ public class GreetingClient{
             ClientThread cs = new ClientThread(server);
             cs.start();
 
-            System.out.println("Just connected to " + server.getRemoteSocketAddress());
-            
+            System.out.println("Just connected to " + server.getRemoteSocketAddress()+"\n");
+
+			System.out.print("Enter name: ");
+			clientName = scan.nextLine();
+			
+			/*OutputStream outToServer = server.getOutputStream();
+            DataOutputStream out = new DataOutputStream(outToServer);
+			out.writeUTF("***"+clientName+" joined the chat***");*/
 
             while(true){
-		message = scan.nextLine();
+				message = scan.nextLine();
 
                 /* Send data to the ServerSocket */
                 OutputStream outToServer = server.getOutputStream();
                 DataOutputStream out = new DataOutputStream(outToServer);
-                out.writeUTF("Client " + server.getLocalSocketAddress()+" says: " +message);
+                //out.writeUTF("Client " + server.getLocalSocketAddress()+" says: " +message);
+				out.writeUTF(clientName+": "+message);
 
             }
 
@@ -62,7 +69,7 @@ public class GreetingClient{
                     /* Receive data from the ServerSocket */
                     InputStream inFromServer = server.getInputStream();
                     DataInputStream in = new DataInputStream(inFromServer);
-                    System.out.println("Server says " + in.readUTF());
+					System.out.println(in.readUTF());
                 } catch (IOException e) {}
             }
         }
