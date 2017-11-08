@@ -58,6 +58,7 @@ public class GreetingServer extends Thread{
         }
     }
 
+    // Sends messages to all clients via server
     class ServerThread extends Thread{
 
     	Socket client;
@@ -87,17 +88,6 @@ public class GreetingServer extends Thread{
             }
         }
 
-    }
-
-    public void sendAll(String msg) {
-        for(int i=0;i < threads.size(); i++) {
-            try {
-                ServerThread c = (ServerThread)threads.get(i);
-                DataOutputStream out2 = new DataOutputStream(c.client.getOutputStream());
-                out2.writeUTF(msg); 
-            } catch(IOException e){}
-
-        }
     }
 }
 
