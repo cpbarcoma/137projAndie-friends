@@ -8,11 +8,15 @@ import java.io.*;
 import java.util.Scanner;
 
 public class GreetingClient{
+    public static String clientName;
+
     public static void main(String [] args){
         try{
             String serverName = args[0]; //get IP address of server from first param
             int port = Integer.parseInt(args[1]); //get port from second param
             //String message = args[2]; //get message from the third param
+            clientName = args[2];
+
             String message;
             Scanner scan = new Scanner(System.in);
 
@@ -26,15 +30,16 @@ public class GreetingClient{
 
             System.out.println("Just connected to " + server.getRemoteSocketAddress());
             
+            System.out.println("\nWELCOME " + clientName + "!");
 
-            while(true){
-		message = scan.nextLine();
+            while(true){	        
+                //System.out.print(clientName + ": ");
+                message = scan.nextLine();
 
                 /* Send data to the ServerSocket */
                 OutputStream outToServer = server.getOutputStream();
                 DataOutputStream out = new DataOutputStream(outToServer);
-                out.writeUTF("Client " + server.getLocalSocketAddress()+" says: " +message);
-
+                out.writeUTF(clientName+": " +message);
             }
 
 			//closing the socket of the client
@@ -62,7 +67,7 @@ public class GreetingClient{
                     /* Receive data from the ServerSocket */
                     InputStream inFromServer = server.getInputStream();
                     DataInputStream in = new DataInputStream(inFromServer);
-                    System.out.println("Server says " + in.readUTF());
+                    System.out.println(in.readUTF());
                 } catch (IOException e) {}
             }
         }
