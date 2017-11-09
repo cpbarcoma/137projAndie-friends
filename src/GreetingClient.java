@@ -15,11 +15,13 @@ public class GreetingClient{
             String serverName = args[0]; //get IP address of server from first param
             int port = Integer.parseInt(args[1]); //get port from second param
             //String message = args[2]; //get message from the third param
-            clientName = args[2];
 
             String message;
             Scanner scan = new Scanner(System.in);
 
+            System.out.print("Enter Name: ");
+            clientName = scan.nextLine();
+            
             /* Open a ClientSocket and connect to ServerSocket */
             System.out.println("Connecting to " + serverName + " on port " + port);
             
