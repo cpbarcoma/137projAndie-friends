@@ -8,14 +8,20 @@ import java.io.*;
 import java.util.Scanner;
 
 public class GreetingClient{
+    public static String clientName;
+
     public static void main(String [] args){
         try{
             String serverName = args[0]; //get IP address of server from first param
             int port = Integer.parseInt(args[1]); //get port from second param
             //String message = args[2]; //get message from the third param
-            String message, clientName;
+
+            String message;
             Scanner scan = new Scanner(System.in);
 
+            System.out.print("Enter Name: ");
+            clientName = scan.nextLine();
+            
             /* Open a ClientSocket and connect to ServerSocket */
             System.out.println("Connecting to " + serverName + " on port " + port);
             
@@ -24,24 +30,19 @@ public class GreetingClient{
             ClientThread cs = new ClientThread(server);
             cs.start();
 
-            System.out.println("Just connected to " + server.getRemoteSocketAddress()+"\n");
+            System.out.println("Just connected to " + server.getRemoteSocketAddress());
+            
+            System.out.println("\nWELCOME " + clientName + "!");
 
-			System.out.print("Enter name: ");
-			clientName = scan.nextLine();
-			
-			/*OutputStream outToServer = server.getOutputStream();
-            DataOutputStream out = new DataOutputStream(outToServer);
-			out.writeUTF("***"+clientName+" joined the chat***");*/
-
-            while(true){
-				message = scan.nextLine();
+            while(true){	        
+                //System.out.print(clientName + ": ");
+                message = scan.nextLine();
 
                 /* Send data to the ServerSocket */
                 OutputStream outToServer = server.getOutputStream();
                 DataOutputStream out = new DataOutputStream(outToServer);
-                //out.writeUTF("Client " + server.getLocalSocketAddress()+" says: " +message);
-				out.writeUTF(clientName+": "+message);
 
+                out.writeUTF(clientName+": " +message);
             }
 
 			//closing the socket of the client
@@ -69,7 +70,8 @@ public class GreetingClient{
                     /* Receive data from the ServerSocket */
                     InputStream inFromServer = server.getInputStream();
                     DataInputStream in = new DataInputStream(inFromServer);
-					System.out.println(in.readUTF());
+
+                    System.out.println(in.readUTF());
                 } catch (IOException e) {}
             }
         }

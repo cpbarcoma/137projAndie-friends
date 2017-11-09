@@ -19,9 +19,11 @@ public class GreetingServer extends Thread{
 
     public void run(){
         boolean connected = true;
+        System.out.println("Waiting for client on port " + serverSocket.getLocalPort() + "...");
+
         while(connected){
             try{
-                System.out.println("Waiting for client on port " + serverSocket.getLocalPort() + "...");
+                
 
                 /* Start accepting data from the ServerSocket */
                 //waits or accepts connection from client
@@ -77,8 +79,10 @@ public class GreetingServer extends Thread{
                     System.out.println(text); //readUTF waits for input
                     for(int i=0;i < threads.size(); i++) {
                         ServerThread c = (ServerThread)threads.get(i);
-                        DataOutputStream out = new DataOutputStream(c.client.getOutputStream());
-                        out.writeUTF(this.text);
+                        if(!c.client.getRemoteSocketAddress().equals(this.client.getRemoteSocketAddress())){
+                            DataOutputStream out = new DataOutputStream(c.client.getOutputStream());
+                            out.writeUTF(this.text);
+                        }
                     }
     			} catch(IOException e){
 
