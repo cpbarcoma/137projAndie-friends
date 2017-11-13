@@ -10,8 +10,11 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.Container;
 /**
  * The game client itself!
  * @author Joseph Anthony C. Hermocilla
@@ -23,10 +26,35 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	 * Main window
 	 */
 	JFrame frame= new JFrame();
+
+	/*
+		Additional UI elements - START AMS
+	*/
+	Container container;
+	JPanel mainPanel;
 	
+	// North panel elements
+	JPanel northPanel;
+	JButton exitBtn, helpBtn;
+	JLabel redScore, blueScore, timeRem;
+	String redScoreTxt, blueScoreTxt, timeRemTxt;
+
+	// South panel elements
+	JPanel southPanel;
+	// Temporary solution: Buttons or pure text
+	JButton[] instBtn = new JButton[5];
+	JLabel[] instText = new JLabel[5];
+
+	// Middle panel elements: map
+
+	/*
+		END AMS
+	*/
+
 	/**
 	 * Player position, speed etc.
 	 */
+
 	int x=10,y=10,xspeed=2,yspeed=2,prevX,prevY;
 	
 	/**
@@ -81,15 +109,13 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	public CircleWars(String server,String name) throws Exception{
 		this.server=server;
 		this.name=name;
-		
+
 		frame.setTitle(APP_NAME+":"+name);
 		//set some timeout for the socket
 		socket.setSoTimeout(100);
-		
-		//Some gui stuff i hate.
-		frame.getContentPane().add(this);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(640, 480);
+
+		frameSetup();
+
 		frame.setVisible(true);
 		
 		//create the buffer
@@ -102,6 +128,67 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		//tiime to play
 		t.start();		
 	}
+
+	/*
+		Set up the frame - START AMS
+	*/
+	public void frameSetup() {
+		//Some gui stuff i hate.
+		frame.getContentPane().add(this);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(1100, 600); // can be set later
+			
+		/* START AMS */
+		container = frame.getContentPane();
+
+		// Main panel setup
+		mainPanel = new JPanel(new BorderLayout());
+
+		// North panel setup
+		redScoreTxt = "0";
+		blueScoreTxt = "0";
+		timeRemTxt = "0:00";
+
+		northPanel = new JPanel(new GridLayout(1, 5));
+		exitBtn = new JButton("EXIT");
+		helpBtn = new JButton("HELP");
+		redScore = new JLabel("RED" + redScoreTxt);
+		blueScore = new JLabel(blueScoreTxt + " BLUE");
+		timeRem = new JLabel("TIME: " + timeRemTxt);
+
+		northPanel.add(exitBtn);
+		northPanel.add(helpBtn);
+		northPanel.add(redScore);
+		northPanel.add(blueScore);
+		northPanel.add(timeRem);
+
+		// South panel setup
+		southPanel = new JPanel(new FlowLayout());
+		// Instructions: buttons and text
+		instBtn[0] = new JButton("W");
+		instBtn[1] = new JButton("A");
+		instBtn[2] = new JButton("S");
+		instBtn[3] = new JButton("D");
+		instBtn[4] = new JButton("E");
+
+		instText[0] = new JLabel("UP");
+		instText[1] = new JLabel("LEFT");
+		instText[2] = new JLabel("DOWN");
+		instText[3] = new JLabel("RIGHT");
+		instText[4] = new JLabel("SHOOT");
+
+		for (int i=0; i<5; i++) {
+			southPanel.add(instBtn[i]);
+			southPanel.add(instText[i]);
+		}
+
+		mainPanel.add(northPanel, BorderLayout.NORTH);
+		mainPanel.add(southPanel, BorderLayout.SOUTH);
+		container.add(mainPanel);
+	}
+	/*
+		END AMS
+	*/
 	
 	/**
 	 * Helper method for sending data to server
@@ -210,4 +297,5 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 
 		new CircleWars(args[0],args[1]);
 	}
+
 }
