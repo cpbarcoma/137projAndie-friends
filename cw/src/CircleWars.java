@@ -9,6 +9,17 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+//import java.awt.Toolkit;
+
+/*
+dagdag
+*/
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -24,11 +35,22 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	 */
 	JFrame frame= new JFrame();
 	
+//	Toolkit toolkit = Toolkit.getDefaultToolkit();
+
+
 	/**
 	 * Player position, speed etc.
 	 */
 	int x=10,y=10,xspeed=2,yspeed=2,prevX,prevY;
-	
+
+
+	/*
+	new specs for tank
+	*/
+	boolean alive=true;
+	int score=0, directionTank=2;
+
+
 	/**
 	 * Game timer, handler receives data from server to update game state
 	 */
@@ -70,7 +92,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	 * real smooth animation :)
 	 */
 	BufferedImage offscreen;
-
+    
 	
 	/**
 	 * Basic constructor
@@ -82,6 +104,8 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		this.server=server;
 		this.name=name;
 		
+
+
 		frame.setTitle(APP_NAME+":"+name);
 		//set some timeout for the socket
 		socket.setSoTimeout(100);
@@ -89,11 +113,11 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		//Some gui stuff i hate.
 		frame.getContentPane().add(this);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(640, 480);
+		frame.setSize(1100, 600);
 		frame.setVisible(true);
 		
 		//create the buffer
-		offscreen=(BufferedImage)this.createImage(640, 480);
+		offscreen=(BufferedImage)this.createImage(1100, 600);
 		
 		//Some gui stuff again...
 		frame.addKeyListener(new KeyHandler());		
@@ -107,6 +131,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	 * Helper method for sending data to server
 	 * @param msg
 	 */
+
 	public void send(String msg){
 		try{
 			byte[] buf = msg.getBytes();
@@ -120,6 +145,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	/**
 	 * The juicy part!
 	 */
+
 	public void run(){
 		while(true){
 			try{
@@ -140,6 +166,11 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 			//	System.out.println("Server Data:" +serverData);
 			//}
 
+
+
+
+
+
 			//Study the following kids. 
 			if (!connected && serverData.startsWith("CONNECTED")){
 				connected=true;
@@ -148,7 +179,12 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 				System.out.println("Connecting..");				
 				send("CONNECT "+name);
 			}else if (connected){
-				offscreen.getGraphics().clearRect(0, 0, 640, 480);
+				
+				//clears the rectangle
+				offscreen.getGraphics().clearRect(0, 0, 1100, 600);
+				
+				  
+
 				if (serverData.startsWith("PLAYER")){
 					String[] playersInfo = serverData.split(":");
 					for (int i=0;i<playersInfo.length;i++){
@@ -156,9 +192,24 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 						String pname =playerInfo[1];
 						int x = Integer.parseInt(playerInfo[2]);
 						int y = Integer.parseInt(playerInfo[3]);
-						//draw on the offscreen image
-						offscreen.getGraphics().fillOval(x, y, 20, 20);
-						offscreen.getGraphics().drawString(pname,x-10,y+30);					
+					
+					//draw on the offscreen image
+						//nagdrawing ng oval
+//						offscreen.getGraphics().fillOval(x, y, 20, 20);
+						
+						try{
+							BufferedImage imgEnemy = ImageIO.read(new File("tanks/tankEnemy.gif"));						
+						
+						//kelangan ilagay to para me tank rin ung kabilang team.
+
+						offscreen.getGraphics().drawImage(imgEnemy, x, y, 100, 100, this);
+						//prints the name
+						offscreen.getGraphics().drawString(pname,x-30,y+65);
+
+							 } catch (Exception ex){
+						   ex.printStackTrace();
+						 }					
+					
 					}
 					//show the changes
 					frame.repaint();
@@ -172,6 +223,47 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	 */
 	public void paintComponent(Graphics g){
 		g.drawImage(offscreen, 0, 0, null);
+
+
+
+		//dito inuupdate ung para sa player para makagalaw sia.
+		try {
+		       //ready the images
+		        /*BufferedImage imgUp = ImageIO.read(new File("images/RedTankU.gif"));
+		        BufferedImage imgDown = ImageIO.read(new File("images/RedTankD.gif"));
+		        BufferedImage imgLeft = ImageIO.read(new File("images/RedTankL.gif"));
+		        BufferedImage imgRight = ImageIO.read(new File("images/RedTankR.gif"));
+		        */
+
+		       //use this 
+		        BufferedImage imgUp = ImageIO.read(new File("tanks/tankUp.gif"));
+		        BufferedImage imgDown = ImageIO.read(new File("tanks/tankDown.gif"));
+		        BufferedImage imgLeft = ImageIO.read(new File("tanks/tankLeft.gif"));
+		        BufferedImage imgRight = ImageIO.read(new File("tanks/tankRight.gif"));
+
+		       
+		    switch (directionTank) {		
+			case 1:				
+				g.drawImage(imgDown, x, y, 100, 100, this);
+				break;
+
+			case 2:
+				g.drawImage(imgUp, x, y, 100, 100, this);
+				break;
+			
+			case 3:
+				g.drawImage(imgLeft, x, y, 100, 100, this);
+				break;
+
+			case 4:
+				g.drawImage(imgRight, x, y, 100, 100, this);
+				break;
+			}
+
+
+		    } catch (Exception ex){
+		        ex.printStackTrace();
+		    }
 	}
 	
 	
@@ -185,15 +277,28 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 			}				
 		}
 	}
-	
+
+	//eto ung para sa motion
 	class KeyHandler extends KeyAdapter{
 		public void keyPressed(KeyEvent ke){
 			prevX=x;prevY=y;
 			switch (ke.getKeyCode()){
-			case KeyEvent.VK_DOWN:y+=yspeed;break;
-			case KeyEvent.VK_UP:y-=yspeed;break;
-			case KeyEvent.VK_LEFT:x-=xspeed;break;
-			case KeyEvent.VK_RIGHT:x+=xspeed;break;
+			case KeyEvent.VK_DOWN:
+				y+=yspeed;
+				directionTank=1;
+				break;
+			case KeyEvent.VK_UP:
+				y-=yspeed;
+				directionTank=2;
+				break;
+			case KeyEvent.VK_LEFT:
+				x-=xspeed;
+				directionTank=3;
+				break;
+			case KeyEvent.VK_RIGHT:
+				x+=xspeed;
+				directionTank=4;
+				break;
 			}
 			if (prevX != x || prevY != y){
 				send("PLAYER "+name+" "+x+" "+y);

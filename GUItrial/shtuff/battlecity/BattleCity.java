@@ -122,7 +122,7 @@ public class BattleCity extends Frame implements ActionListener {
 		}
 		g.setColor(c);
 
-		baseCamp.draw(g); 
+	//	baseCamp.draw(g); 
 		spawnTankPoint.draw(g);
 		if (Player2) {
 			spawnTankPoint2.draw(g);

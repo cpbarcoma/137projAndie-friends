@@ -28,6 +28,18 @@ public class NetPlayer {
 	private int x,y;
 
 	/**
+	 * The state of player
+	 */
+	private boolean alive;
+
+	/**
+	 * The score of player
+	 */
+	private int score;
+
+	
+
+	/**
 	 * Constructor
 	 * @param name
 	 * @param address
@@ -96,6 +108,41 @@ public class NetPlayer {
 	public void setY(int y){
 		this.y=y;		
 	}
+
+	/**
+	 * Returns the state of player
+	 * @return
+	 */
+	public boolean getAlive(){
+		return alive;
+	}
+	
+	/**
+	 * Sets the state of the player
+	 * @param alive
+	 */
+	public void setY(boolean alive){
+		this.alive=alive;		
+	}
+
+
+
+	/**
+	 * Returns the score of the player
+	 * @return
+	 */
+	public int getScore(){
+		return score;
+	}
+	
+	/**
+	 * Sets the score of the player
+	 * @param score
+	 */
+	public void setScore(int score){
+		this.score=score;		
+	}
+
 
 	/**
 	 * String representation. used for transfer over the network
