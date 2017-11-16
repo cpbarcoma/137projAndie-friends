@@ -1,17 +1,12 @@
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Container;
 
-public class GamePanel {
-	JFrame frame;
-	Container container;
-	JPanel mainPanel;
-	
+public class GamePanel extends JPanel {
 	// North panel elements
 	JPanel northPanel;
 	JPanel buttonPanel, scorePanel;
@@ -28,17 +23,12 @@ public class GamePanel {
 	// Middle panel elements: map
 	MapPanel mapPanel = new MapPanel();
 
-	public GamePanel(JFrame f) {
-		this.frame = f;
+	public GamePanel() {
+		super(new BorderLayout());
 		frameSetup();
 	}
 
 	public void frameSetup() {
-		this.container = frame.getContentPane();
-
-		// Main panel setup
-		this.mainPanel = new JPanel(new BorderLayout());
-
 		// North panel setup
 		this.redScoreTxt = "0";
 		this.blueScoreTxt = "0";
@@ -84,9 +74,8 @@ public class GamePanel {
 			this.southPanel.add(this.instText[i]);
 		}
 
-		this.mainPanel.add(this.northPanel, BorderLayout.NORTH);
-		this.mainPanel.add(this.southPanel, BorderLayout.SOUTH);
-		this.mainPanel.add(this.mapPanel, BorderLayout.CENTER);
-		this.container.add(this.mainPanel);
+		this.add(this.northPanel, BorderLayout.NORTH);
+		this.add(this.southPanel, BorderLayout.SOUTH);
+		this.add(this.mapPanel, BorderLayout.CENTER);
 	}
 }

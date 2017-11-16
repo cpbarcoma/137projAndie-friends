@@ -93,12 +93,13 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		//set some timeout for the socket
 		socket.setSoTimeout(100);
 
-		GamePanel gamePanel = new GamePanel(frame);
-
+		// perform card setup
+		CardsPanel cp = new CardsPanel();
+		frame.setContentPane(cp);
 		frame.setVisible(true);
 		
 		//create the buffer
-		offscreen=(BufferedImage)this.createImage(640, 480);
+		//offscreen=(BufferedImage)this.createImage(640, 480);
 		
 		//Some gui stuff again...
 		frame.addKeyListener(new KeyHandler());		
@@ -153,20 +154,22 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 				System.out.println("Connecting..");				
 				send("CONNECT "+name);
 			}else if (connected){
-				offscreen.getGraphics().clearRect(0, 0, 640, 480);
-				if (serverData.startsWith("PLAYER")){
+				//offscreen.getGraphics().clearRect(0, 0, 640, 480);
+				if (serverData.startsWith("PLAYER") && CardsPanel.getInGame() == true){
 					String[] playersInfo = serverData.split(":");
-					for (int i=0;i<playersInfo.length;i++){
-						String[] playerInfo = playersInfo[i].split(" ");
+					//for (int i=0;i<playersInfo.length;i++){
+						/*String[] playerInfo = playersInfo[i].split(" ");
 						String pname =playerInfo[1];
 						int x = Integer.parseInt(playerInfo[2]);
 						int y = Integer.parseInt(playerInfo[3]);
 						//draw on the offscreen image
 						offscreen.getGraphics().fillOval(x, y, 20, 20);
-						offscreen.getGraphics().drawString(pname,x-10,y+30);					
-					}
+						offscreen.getGraphics().drawString(pname,x-10,y+30);*/					
+						
+					//}
 					//show the changes
-					frame.repaint();
+					//frame.repaint();
+
 				}			
 			}			
 		}
