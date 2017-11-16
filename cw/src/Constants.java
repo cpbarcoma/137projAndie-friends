@@ -4,7 +4,7 @@
  *
  */
 public interface Constants {
-	public static final String APP_NAME="Circle Wars 0.01";
+	public static final String APP_NAME="SHOOKs To Go";
 	
 	/**
 	 * Game states.

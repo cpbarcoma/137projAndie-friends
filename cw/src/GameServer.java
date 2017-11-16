@@ -116,11 +116,11 @@ public class GameServer implements Runnable, Constants{
 			 */
 			playerData=new String(buf);
 			
-			//remove excess bytes
+			//remove excess bytes. tama naman ung nakukuha.
 			playerData = playerData.trim();
-			//if (!playerData.equals("")){
-			//	System.out.println("Player Data:"+playerData);
-			//}
+			if (!playerData.equals("")){
+				System.out.println("Player Data:"+playerData);
+			}
 		
 			// process
 			switch(gameStage){
@@ -149,15 +149,23 @@ public class GameServer implements Runnable, Constants{
 					  //Player data was received!
 					  if (playerData.startsWith("PLAYER")){
 						  //Tokenize:
-						  //The format: PLAYER <player name> <x> <y>
+						  //The format: PLAYER <player name> <x> <y> <direction>
+
 						  String[] playerInfo = playerData.split(" ");					  
 						  String pname =playerInfo[1];
+						 
 						  int x = Integer.parseInt(playerInfo[2].trim());
 						  int y = Integer.parseInt(playerInfo[3].trim());
+						  //dagdag
+						  int directionTank = Integer.parseInt(playerInfo[4].trim());
+
+
 						  //Get the player from the game state
 						  NetPlayer player=(NetPlayer)game.getPlayers().get(pname);					  
 						  player.setX(x);
 						  player.setY(y);
+						  player.setDirection(directionTank);
+
 						  //Update the game state
 						  game.update(pname, player);
 						  //Send to all the updated game state
