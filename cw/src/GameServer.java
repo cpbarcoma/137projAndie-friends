@@ -64,6 +64,8 @@ public class GameServer implements Runnable, Constants{
 		   	  timer.cancel();
 
 		  	  secondsPassed = 0;
+
+		  	  System.out.println("Times Up!")
 		    }
 		}
 	};
@@ -77,11 +79,11 @@ public class GameServer implements Runnable, Constants{
 	/**
 	 * Simple constructor
 	 */
-	public GameServer(int numPlayers){
+	public GameServer(int numPlayers int numMinutes){
 		this.numPlayers = numPlayers;
 		this.timer = new Timer();
 		this.secondsPassed = 0;
-		this.timeOut = 10;
+		this.timeOut = 60 * numMinutes;
 
 		try {
             serverSocket = new DatagramSocket(PORT);
@@ -202,12 +204,12 @@ public class GameServer implements Runnable, Constants{
 	}	
 
 	public static void main(String args[]){
-		if (args.length != 1){
-			System.out.println("Usage: java -jar circlewars-server <number of players>");
+		if (args.length != 2){
+			System.out.println("Usage: java -jar circlewars-server <number of players> <number of minutes>");
 			System.exit(1);
 		}
 		
-		new GameServer(Integer.parseInt(args[0]));
+		new GameServer(Integer.parseInt(args[0]), Float.parseInt(args[1]));
 	}
 }
 
