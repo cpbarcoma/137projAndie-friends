@@ -65,4 +65,8 @@ public class CardsPanel extends JPanel {
 	public static Boolean getInGame() {
 		return inGame;
 	}
+
+	public GamePanel getGP() {
+		return this.game;
+	}
 }

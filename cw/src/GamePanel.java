@@ -21,7 +21,7 @@ public class GamePanel extends JPanel {
 	JLabel[] instText = new JLabel[5];
 
 	// Middle panel elements: map
-	MapPanel mapPanel = new MapPanel();
+	static MapPanel mapPanel = new MapPanel();
 
 	public GamePanel() {
 		super(new BorderLayout());
@@ -77,5 +77,9 @@ public class GamePanel extends JPanel {
 		this.add(this.northPanel, BorderLayout.NORTH);
 		this.add(this.southPanel, BorderLayout.SOUTH);
 		this.add(this.mapPanel, BorderLayout.CENTER);
+	}
+
+	public MapPanel getMP() {
+		return this.mapPanel;
 	}
 }

@@ -92,7 +92,9 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	 */
 	BufferedImage offscreen;
     
-	
+    // CARD PANEL
+	CardsPanel cp;
+
 	/**
 	 * Basic constructor
 	 * @param server
@@ -111,7 +113,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		socket.setSoTimeout(100);
 
 		// perform card setup
-		CardsPanel cp = new CardsPanel();
+		cp = new CardsPanel();
 		frame.setContentPane(cp);
 		frame.setVisible(true);
 		
@@ -211,7 +213,9 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 
 		       	
 						   	if(directionTank==0){	//default			
-								offscreen.getGraphics().drawImage(imgEnemyUp, x, y, 100, 100, null);
+								/*offscreen.getGraphics().drawImage(imgEnemyUp, x, y, 100, 100, null);*/
+								System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+							this.cp.getGP().getMP().getGraphics().drawImage(imgEnemyUp, x, y, 100, 100, null);
 								}
 
 							if(directionTank==1){				
@@ -243,6 +247,18 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 				}			
 			}			
 		}
+	}
+
+	/*
+		get and set offscreen
+	*/
+	public BufferedImage getOffscreen() {
+		return offscreen;
+	}
+
+	public void setOffscreen(int x, int y) {
+		this.x = x;
+		this.y = y;
 	}
 	
 	/**

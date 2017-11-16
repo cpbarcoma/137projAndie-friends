@@ -29,4 +29,8 @@ public class MapPanel extends JPanel {
 		g2d.setColor(Color.GREEN);
 		g2d.fill(blueBase);
 	}
+
+	public void doOffScreen() {
+		System.out.println("===================DO DA OFFSCREEN OMG============================");
+	}
 }
