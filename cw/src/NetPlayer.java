@@ -28,6 +28,12 @@ public class NetPlayer {
 	private int x,y;
 
 	/**
+	 * The direction of player
+	 */
+	private int directionTank;
+
+
+	/**
 	 * The state of player
 	 */
 	private boolean alive;
@@ -121,7 +127,7 @@ public class NetPlayer {
 	 * Sets the state of the player
 	 * @param alive
 	 */
-	public void setY(boolean alive){
+	public void setAlive(boolean alive){
 		this.alive=alive;		
 	}
 
@@ -145,6 +151,25 @@ public class NetPlayer {
 
 
 	/**
+	 * Returns the direction of the player
+	 * @return
+	 */
+	public int getDirection(){
+		return directionTank;
+	}
+	
+	/**
+	 * Sets the score of the player
+	 * @param score
+	 */
+	public void setDirection(int direction){
+		this.directionTank=directionTank;		
+	}
+
+
+
+
+	/**
 	 * String representation. used for transfer over the network
 	 */
 	public String toString(){
@@ -152,7 +177,8 @@ public class NetPlayer {
 		retval+="PLAYER ";
 		retval+=name+" ";
 		retval+=x+" ";
-		retval+=y;
+		retval+=y+" ";
+		retval+=directionTank;
 		return retval;
 	}	
 }
