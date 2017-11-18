@@ -7,11 +7,10 @@ import java.awt.BorderLayout;
 import java.awt.event.*;
 
 public class CardsPanel extends JPanel {
-	static Boolean inGame = new Boolean(false);
+	static Boolean inGame = false, clickedEnter = false;
 	static JPanel cards, landing, subLanding;
 	static GamePanel game;
 	static JButton enterGame;
-	static JLabel enterGameValid;
 	final static String LAND = "LANDING";
 	final static String GAME = "GAME";
 
@@ -29,11 +28,9 @@ public class CardsPanel extends JPanel {
 		this.landing = new JPanel(new BorderLayout());
 		this.subLanding = new JPanel();	// holds components of landing
 
-		this.enterGameValid = new JLabel("Waiting for more players...");
-		this.enterGame = new JButton("Enter Game");
+		this.enterGame = new JButton("Waiting for more players...");
 		this.subLanding.add(playerName);
 		this.subLanding.add(enterGame);
-		this.landing.add(enterGameValid, BorderLayout.NORTH);
 		this.landing.add(subLanding, BorderLayout.CENTER);
 
 		// Game screen: GamePanel
@@ -61,18 +58,24 @@ public class CardsPanel extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			CardLayout cl = (CardLayout)(cards.getLayout());
 			cl.show(cards, panel);
+			clickedEnter = true;
 		}
 	}
 
 	public static Boolean getInGame(String serverData) {
 		if (serverData.startsWith("PLAYER")) {
 			inGame = true;
-			enterGameValid.setText("Ready!");
+			enterGame.setText("Ready!");
 			// Add actionListener to enterGame (for switching cards)
 			enterGame.addActionListener(new GameListener(cards, GAME));
 		} else {
 			inGame = false;
 		}
 		return inGame;
+	}
+
+	public static Boolean getClicked() {
+		System.out.println("CLICKED: " + clickedEnter);
+		return clickedEnter;
 	}
 }
