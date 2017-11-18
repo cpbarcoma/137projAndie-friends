@@ -1,4 +1,5 @@
 import java.awt.Graphics;
+import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -83,6 +84,8 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		this.name=name;
 		
 		frame.setTitle(APP_NAME+":"+name);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(1100, 600);
 		//set some timeout for the socket
 		socket.setSoTimeout(100);
 
