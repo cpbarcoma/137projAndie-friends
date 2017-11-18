@@ -19,6 +19,10 @@ import javax.swing.JPanel;
  *
  */
 
+// Imports for Timer
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class CircleWars extends JPanel implements Runnable, Constants{
 	/**
 	 * Main window
@@ -179,8 +183,6 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	}
 	
 	
-	
-	
 	class MouseMotionHandler extends MouseMotionAdapter{
 		public void mouseMoved(MouseEvent me){
 			x=me.getX();y=me.getY();
@@ -204,8 +206,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 			}	
 		}
 	}
-	
-	
+
 	public static void main(String args[]) throws Exception{
 		if (args.length != 2){
 			System.out.println("Usage: java -jar circlewars-client <server> <player name>");
@@ -213,5 +214,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		}
 
 		new CircleWars(args[0],args[1]);
+
+
 	}
 }
