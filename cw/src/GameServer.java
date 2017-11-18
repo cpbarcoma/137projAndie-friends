@@ -175,7 +175,7 @@ public class GameServer implements Runnable, Constants{
 					  broadcast("START");
 					  gameStage=IN_PROGRESS;
 
-					  //timer.scheduleAtFixedRate(task, 1000, 1000);
+					  timer.scheduleAtFixedRate(task, 1000, 1000);
 
 					  break;
 				  case IN_PROGRESS:
@@ -183,7 +183,6 @@ public class GameServer implements Runnable, Constants{
 					  
 					  //Player data was received!
 					  if (playerData.startsWith("PLAYER")){
-					  	System.out.println(CardsPanel.getClicked());
 						  //Tokenize:
 						  //The format: PLAYER <player name> <x> <y>
 						  String[] playerInfo = playerData.split(" ");					  
