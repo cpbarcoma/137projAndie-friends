@@ -52,8 +52,8 @@ public class GameServer implements Runnable, Constants{
 	 */
 	Thread t = new Thread(this);
 	
-	int timeOut;
-	int secondsPassed;
+	float timeOut;
+	float secondsPassed;
 	Timer timer;
 	
 	TimerTask task = new TimerTask(){
@@ -65,7 +65,7 @@ public class GameServer implements Runnable, Constants{
 
 		  	  secondsPassed = 0;
 
-		  	  System.out.println("Times Up!")
+		  	  System.out.println("Times Up!");
 		    }
 		}
 	};
@@ -79,7 +79,7 @@ public class GameServer implements Runnable, Constants{
 	/**
 	 * Simple constructor
 	 */
-	public GameServer(int numPlayers int numMinutes){
+	public GameServer(int numPlayers, float numMinutes){
 		this.numPlayers = numPlayers;
 		this.timer = new Timer();
 		this.secondsPassed = 0;
@@ -209,7 +209,7 @@ public class GameServer implements Runnable, Constants{
 			System.exit(1);
 		}
 		
-		new GameServer(Integer.parseInt(args[0]), Float.parseInt(args[1]));
+		new GameServer(Integer.parseInt(args[0]), Float.parseFloat(args[1]));
 	}
 }
 
