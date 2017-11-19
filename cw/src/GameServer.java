@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+// Imports for Timer
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * The main game server. It just accepts the messages sent by one player to
  * another player
@@ -48,11 +52,39 @@ public class GameServer implements Runnable, Constants{
 	 */
 	Thread t = new Thread(this);
 	
+	float timeOut;
+	float secondsPassed;
+	Timer timer;
+	
+	TimerTask task = new TimerTask(){
+		public void run(){
+			secondsPassed++;
+			System.out.println("Second Passed: " + secondsPassed);
+			if (secondsPassed == timeOut){
+		   	  timer.cancel();
+
+		  	  secondsPassed = 0;
+
+		  	  System.out.println("Times Up!");
+		    }
+		}
+	};
+
+	public void timerStart(){
+		// second param will tell how long it will start
+		// third param is the time increment 
+		timer.scheduleAtFixedRate(task, 1000, 1000);
+	}
+
 	/**
 	 * Simple constructor
 	 */
-	public GameServer(int numPlayers){
+	public GameServer(int numPlayers, float numMinutes){
 		this.numPlayers = numPlayers;
+		this.timer = new Timer();
+		this.secondsPassed = 0;
+		this.timeOut = 60 * numMinutes;
+
 		try {
             serverSocket = new DatagramSocket(PORT);
 			serverSocket.setSoTimeout(100);
@@ -62,7 +94,7 @@ public class GameServer implements Runnable, Constants{
 		}catch(Exception e){}
 		//Create the game state
 		game = new GameState();
-		
+
 		System.out.println("Game created...");
 		
 		//Start the game thread
@@ -97,7 +129,7 @@ public class GameServer implements Runnable, Constants{
 			ioe.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * The juicy part
 	 */
@@ -142,6 +174,9 @@ public class GameServer implements Runnable, Constants{
 					  System.out.println("Game State: START");
 					  broadcast("START");
 					  gameStage=IN_PROGRESS;
+
+					  timer.scheduleAtFixedRate(task, 1000, 1000);
+
 					  break;
 				  case IN_PROGRESS:
 					  //System.out.println("Game State: IN_PROGRESS");
@@ -175,15 +210,14 @@ public class GameServer implements Runnable, Constants{
 			}				  
 		}
 	}	
-	
-	
+
 	public static void main(String args[]){
-		if (args.length != 1){
-			System.out.println("Usage: java -jar circlewars-server <number of players>");
+		if (args.length != 2){
+			System.out.println("Usage: java -jar circlewars-server <number of players> <number of minutes>");
 			System.exit(1);
 		}
 		
-		new GameServer(Integer.parseInt(args[0]));
+		new GameServer(Integer.parseInt(args[0]), Float.parseFloat(args[1]));
 	}
 }
 
