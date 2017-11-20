@@ -155,7 +155,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		
 		//Some gui stuff again...
 		frame.addKeyListener(new KeyHandler());		
-		frame.addMouseMotionListener(new MouseMotionHandler());
+		// frame.addMouseMotionListener(new MouseMotionHandler());
 
 		//tiime to play
 		t.start();		
