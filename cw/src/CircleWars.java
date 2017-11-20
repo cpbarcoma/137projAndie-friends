@@ -22,7 +22,12 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import javax.swing.JFrame;
+import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JLabel;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 /**
  * The game client itself!
  * @author Joseph Anthony C. Hermocilla
@@ -96,6 +101,19 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	 * real smooth animation :)
 	 */
 	BufferedImage offscreen;
+
+	// Additional UI elements
+	JPanel northPanel;
+	JPanel buttonPanel, scorePanel;
+	JButton exitBtn, helpBtn;
+	JLabel redScore, blueScore, timeRem;
+	String redScoreTxt, blueScoreTxt, timeRemTxt;
+
+	// South panel elements
+	JPanel southPanel;
+	// Temporary solution: Buttons or pure text
+	JButton[] instBtn = new JButton[5];
+	JLabel[] instText = new JLabel[5];
     
 	
 	/**
@@ -108,6 +126,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		this.server=server;
 		this.name=name;
 		
+		this.setLayout(new BorderLayout());
 
 
 		frame.setTitle(APP_NAME+":"+name);
@@ -118,6 +137,17 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		frame.getContentPane().add(this);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1100, 600);
+
+		// Set up additional UI elements
+		northPanel = new JPanel(new GridLayout(1, 3));
+		northPanel = setupNorth(northPanel);
+
+		southPanel = new JPanel(new FlowLayout());
+		southPanel = setupSouth(southPanel);
+		
+		this.add(northPanel, BorderLayout.NORTH);
+		this.add(southPanel, BorderLayout.SOUTH);
+		frame.setFocusable(true);
 		frame.setVisible(true);
 		
 		//create the buffer
@@ -129,6 +159,55 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 
 		//tiime to play
 		t.start();		
+	}
+
+	// set up North panel
+	public JPanel setupNorth(JPanel np) {
+		redScoreTxt = "0";
+		blueScoreTxt = "0";
+		timeRemTxt = "0:00";
+
+		buttonPanel = new JPanel();
+		exitBtn = new JButton("EXIT");
+		helpBtn = new JButton("HELP");
+		buttonPanel.add(exitBtn);
+		buttonPanel.add(helpBtn);
+
+		scorePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		redScore = new JLabel("RED " + redScoreTxt);
+		blueScore = new JLabel(blueScoreTxt + " BLUE");
+		scorePanel.add(redScore);
+		scorePanel.add(blueScore);
+		
+		timeRem = new JLabel("TIME: " + timeRemTxt);
+
+		np.add(buttonPanel);
+		np.add(scorePanel);
+		np.add(timeRem);
+
+		return np;
+	}
+
+	// set up South panel
+	public JPanel setupSouth(JPanel sp) {
+		// Instructions: buttons and text
+		instBtn[0] = new JButton("UP");
+		instBtn[1] = new JButton("DOWN");
+		instBtn[2] = new JButton("LEFT");
+		instBtn[3] = new JButton("RIGHT");
+		instBtn[4] = new JButton("E");
+
+		instText[0] = new JLabel("UP");
+		instText[1] = new JLabel("LEFT");
+		instText[2] = new JLabel("DOWN");
+		instText[3] = new JLabel("RIGHT");
+		instText[4] = new JLabel("SHOOT");
+
+		for (int i=0; i<5; i++) {
+			sp.add(instBtn[i]);
+			sp.add(instText[i]);
+		}
+		return sp;
 	}
 	
 	/**
