@@ -50,7 +50,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	/**
 	 * Player position, speed etc.
 	 */
-	int x=10,y=10,xspeed=4,yspeed=4,prevX,prevY;
+	int x=1200,y=700, xspeed=4,yspeed=4,prevX,prevY;
 
 
 	/*
@@ -58,7 +58,13 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	*/
 	boolean alive=true;
 	int score=0, directionTank=2; //direction tank==2 ay tank na nakaturo upwards
-
+	int team = 0;//0 ay RED team, 1 ay Green Team
+	int health = 3; //
+	int total;
+	/*
+	if(team==0){
+	int x=500,y=400;
+	}*/
 
 	/**
 	 * Game timer, handler receives data from server to update game state
@@ -262,6 +268,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 				connected=true;
 				System.out.println("Connected.");
 			}else if (!connected){
+				
 				System.out.println("Connecting..");				
 				send("CONNECT "+name);
 			}else if (connected){
@@ -279,7 +286,12 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 						int x = Integer.parseInt(playerInfo[2]);
 						int y = Integer.parseInt(playerInfo[3]);
 						int directionTank = Integer.parseInt(playerInfo[4]);
-						System.out.println("THE CURRENT DIRECTION: "+directionTank);
+						int team = Integer.parseInt(playerInfo[5]);
+						int health = Integer.parseInt(playerInfo[6].trim());
+
+						total = playersInfo.length;
+						team = i%2;
+						System.out.println("THE CURRENT TEAM: "+team+"| TOTAL: "+total);
 					//draw on the offscreen image
 						//nagdrawing ng oval
 						//offscreen.getGraphics().fillOval(x, y, 20, 20);
@@ -291,37 +303,96 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 							//kelangan ilagay to para me tank rin ung kabilang team.
 							offscreen.getGraphics().drawImage(imgEnemy, x, y, 100, 100, this);
 							*///old
-
+							 BufferedImage imgUp = ImageIO.read(new File("tanks/tankUp.gif"));
+					        BufferedImage imgDown = ImageIO.read(new File("tanks/tankDown.gif"));
+					        BufferedImage imgLeft = ImageIO.read(new File("tanks/tankLeft.gif"));
+					        BufferedImage imgRight = ImageIO.read(new File("tanks/tankRight.gif"));
 
 							BufferedImage imgEnemyUp = ImageIO.read(new File("tanks/tankEnemyUp.gif"));
 					        BufferedImage imgEnemyDown = ImageIO.read(new File("tanks/tankEnemyDown.gif"));
 					        BufferedImage imgEnemyLeft = ImageIO.read(new File("tanks/tankEnemyLeft.gif"));
 					        BufferedImage imgEnemyRight = ImageIO.read(new File("tanks/tankEnemyRight.gif"));
 
-		       	
+		       				BufferedImage green = ImageIO.read(new File("tanks/fullLife.gif"));
+					        BufferedImage blue = ImageIO.read(new File("tanks/2Life.gif"));
+					        BufferedImage red = ImageIO.read(new File("tanks/3Life.gif"));
+
+					        /*	
 						   	if(directionTank==0){	//default			
 								offscreen.getGraphics().drawImage(imgEnemyUp, x, y, 100, 100, this);
 								}
+							*/	
 
-							if(directionTank==1){				
-								offscreen.getGraphics().drawImage(imgEnemyDown, x, y, 100, 100, this);
+							 if(team == 0){
+							 	x = 100;
+							 	y = 100;
+
+								if(directionTank==1){				
+									offscreen.getGraphics().drawImage(imgEnemyDown, x, y, 100, 100, this);
+									}
+
+								if(directionTank==2){				
+									offscreen.getGraphics().drawImage(imgEnemyDown, x, y, 100, 100, this);
+									}
+								
+								if(directionTank==3){
+									offscreen.getGraphics().drawImage(imgEnemyLeft, x, y, 100, 100, this);
+									}
+
+								if(directionTank==4){
+									offscreen.getGraphics().drawImage(imgEnemyRight, x, y, 100, 100, this);
+									}
+								}
+								else if(team==1){
+								x = 900;
+								y = 400;
+
+									if(directionTank==1){				
+									offscreen.getGraphics().drawImage(imgUp, x, y, 100, 100, this);
+									}
+									if(directionTank==2){				
+										offscreen.getGraphics().drawImage(imgUp, x, y, 100, 100, this);
+										}
+									
+									if(directionTank==3){
+										offscreen.getGraphics().drawImage(imgLeft, x, y, 100, 100, this);
+										}
+
+									if(directionTank==4){
+										offscreen.getGraphics().drawImage(imgRight, x, y, 100, 100, this);
+										}
 								}
 
-							if(directionTank==2){				
-								offscreen.getGraphics().drawImage(imgEnemyUp, x, y, 100, 100, this);
+
+
+							
+							//DRAWs the health bars	
+							if(health==3){			
+								offscreen.getGraphics().drawImage(green, x, y+100, 96, 12, this);
 								}
 							
-							if(directionTank==3){
-								offscreen.getGraphics().drawImage(imgEnemyLeft, x, y, 100, 100, this);
+							if(health==2){
+								offscreen.getGraphics().drawImage(blue, x, y+100, 62, 12, this);
 								}
 
-							if(directionTank==4){
-								offscreen.getGraphics().drawImage(imgEnemyRight, x, y, 100, 100, this);
+							if(health==1){
+								offscreen.getGraphics().drawImage(red, x, y+100, 30, 12, this);
 								}
-							
-							
-								//prints the name
-								offscreen.getGraphics().drawString(pname,x-30,y+65);
+							//Draws the health bars
+								
+
+								//String Print 
+								String healthState="Health: ";
+								String scoreState="Score ";
+								healthState+=health;
+								scoreState+=score;
+
+
+								offscreen.getGraphics().drawString(pname,x-40,y+45);
+								offscreen.getGraphics().drawString(healthState,x-55,y+65);
+								offscreen.getGraphics().drawString(scoreState,x-49,y+85);
+								
+								System.out.println("Player: "+pname+" Team: "+team+" i:"+i);
 
 							 } catch (Exception ex){
 						   ex.printStackTrace();
@@ -342,17 +413,11 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		g.drawImage(offscreen, 0, 0, null);
 
 
-
+		/* for indiv player
 		//dito inuupdate ung para sa player para makagalaw sia.
 		try {
-		       //ready the images
-		        /*BufferedImage imgUp = ImageIO.read(new File("images/RedTankU.gif"));
-		        BufferedImage imgDown = ImageIO.read(new File("images/RedTankD.gif"));
-		        BufferedImage imgLeft = ImageIO.read(new File("images/RedTankL.gif"));
-		        BufferedImage imgRight = ImageIO.read(new File("images/RedTankR.gif"));
-		        */
-
-		       //use this 
+		       
+   		       //use this 
 		        BufferedImage imgUp = ImageIO.read(new File("tanks/tankUp.gif"));
 		        BufferedImage imgDown = ImageIO.read(new File("tanks/tankDown.gif"));
 		        BufferedImage imgLeft = ImageIO.read(new File("tanks/tankLeft.gif"));
@@ -380,10 +445,10 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 
 		    } catch (Exception ex){
 		        ex.printStackTrace();
-		    }
+		    }*/
 	}
 	
-	
+	/*
 	class MouseMotionHandler extends MouseMotionAdapter{
 		public void mouseMoved(MouseEvent me){
 			x=me.getX();y=me.getY();
@@ -392,6 +457,9 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 			}				
 		}
 	}
+	*/
+
+
 
 	//eto ung para sa motion
 	class KeyHandler extends KeyAdapter{
@@ -401,6 +469,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 			case KeyEvent.VK_DOWN:
 				y+=yspeed;
 				directionTank=1;
+				System.out.println("DOWN !!!");
 				break;
 			case KeyEvent.VK_UP:
 				y-=yspeed;
@@ -416,7 +485,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 				break;
 			}
 			if (prevX != x || prevY != y){
-				send("PLAYER "+name+" "+x+" "+y+" "+directionTank);
+				send("PLAYER "+name+" "+x+" "+y+" "+directionTank+" "+team+" "+health);
 			}	
 		}
 	}

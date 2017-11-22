@@ -47,6 +47,12 @@ public class GameServer implements Runnable, Constants{
 	 */
 	int numPlayers;
 	
+
+	public int getNumPlayers(){
+		return numPlayers;
+	}
+
+
 	/**
 	 * The main game thread
 	 */
@@ -186,20 +192,28 @@ public class GameServer implements Runnable, Constants{
 						  //Tokenize:
 						  //The format: PLAYER <player name> <x> <y> <direction>
 
-						  String[] playerInfo = playerData.split(" ");					  
+						  String[] playerInfo = playerData.split(" ");
+						  					  
 						  String pname =playerInfo[1];
 						 
 						  int x = Integer.parseInt(playerInfo[2].trim());
 						  int y = Integer.parseInt(playerInfo[3].trim());
 						  //dagdag
 						  int directionTank = Integer.parseInt(playerInfo[4].trim());
-
-
+						  int team = Integer.parseInt(playerInfo[5].trim());
+						  int health = Integer.parseInt(playerInfo[6].trim());
+						  
+						//  System.out.println("Team parse from server: "+team);
 						  //Get the player from the game state
 						  NetPlayer player=(NetPlayer)game.getPlayers().get(pname);					  
 						  player.setX(x);
 						  player.setY(y);
 						  player.setDirection(directionTank);
+						//  int temp = playerCount%2;
+						  player.setTeam(team);
+						  player.setHealth(health);
+
+						//  System.out.println("Team parse from server: "+team+" mod: "+playerCount);
 
 						  //Update the game state
 						  game.update(pname, player);
