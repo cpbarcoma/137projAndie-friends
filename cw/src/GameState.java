@@ -35,12 +35,17 @@ public class GameState{
 	 * String representation of this object. Used for data transfer
 	 * over the network
 	 */
+
+
+	//DITO NIA HINDI NAKUKUHA YUNG RETVAL! mula dito pinapasa nia papuntang circle wars
 	public String toString(){
 		String retval="";
 		for(Iterator ite=players.keySet().iterator();ite.hasNext();){
 			String name=(String)ite.next();
 			NetPlayer player=(NetPlayer)players.get(name);
+
 			retval+=player.toString()+":";
+			//System.out.println("RETVAL sa GAMESTATE: "+retval);
 		}
 		return retval;
 	}

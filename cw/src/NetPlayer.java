@@ -2,7 +2,8 @@ import java.net.InetAddress;
 
 /**
  * This class encapsulates a network players
- * @author Joseph Anthony C. Hermocilla
+ * @src Joseph Anthony C. Hermocilla
+ * @author(s) J.A.C. Hermocilla + Andy and Friends
  *
  */
 
@@ -43,7 +44,12 @@ public class NetPlayer {
 	 */
 	private int score;
 
-	
+	//health of the user
+	private int health;
+
+	//from which team is the user
+	private int team;
+	private int initPosition;
 
 	/**
 	 * Constructor
@@ -149,6 +155,17 @@ public class NetPlayer {
 		this.score=score;		
 	}
 
+	public int getInit(){
+		return score;
+	}
+	
+	/**
+	 * Sets the score of the player
+	 * @param score
+	 */
+	public void setInit(int initPosition){
+		this.initPosition=initPosition;		
+	}
 
 	/**
 	 * Returns the direction of the player
@@ -162,10 +179,26 @@ public class NetPlayer {
 	 * Sets the score of the player
 	 * @param score
 	 */
-	public void setDirection(int direction){
+	public void setDirection(int directionTank){
 		this.directionTank=directionTank;		
 	}
 
+
+	public int getHealth(){
+		return health;
+	}
+
+	public void setHealth(int health){
+		this.health=health;
+	}
+
+	public int getTeam(){
+		return health;
+	}
+
+	public void setTeam(int team){
+		this.team=team;
+	}
 
 
 
@@ -178,7 +211,10 @@ public class NetPlayer {
 		retval+=name+" ";
 		retval+=x+" ";
 		retval+=y+" ";
-		retval+=directionTank;
+		retval+=directionTank+" ";
+		retval+=team+" ";
+		retval+=initPosition+" ";	
+		retval+=health;		
 		return retval;
 	}	
 }
