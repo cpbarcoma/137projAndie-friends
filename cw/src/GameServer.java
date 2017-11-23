@@ -201,7 +201,8 @@ public class GameServer implements Runnable, Constants{
 						  //dagdag
 						  int directionTank = Integer.parseInt(playerInfo[4].trim());
 						  int team = Integer.parseInt(playerInfo[5].trim());
-						  int health = Integer.parseInt(playerInfo[6].trim());
+						   int initPosition = Integer.parseInt(playerInfo[6].trim());
+						  int health = Integer.parseInt(playerInfo[7].trim());
 						  
 						//  System.out.println("Team parse from server: "+team);
 						  //Get the player from the game state
@@ -210,6 +211,7 @@ public class GameServer implements Runnable, Constants{
 						  player.setY(y);
 						  player.setDirection(directionTank);
 						//  int temp = playerCount%2;
+						  player.setInit(initPosition);
 						  player.setTeam(team);
 						  player.setHealth(health);
 

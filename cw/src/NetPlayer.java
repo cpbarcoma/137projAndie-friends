@@ -49,7 +49,7 @@ public class NetPlayer {
 
 	//from which team is the user
 	private int team;
-	
+	private int initPosition;
 
 	/**
 	 * Constructor
@@ -155,6 +155,17 @@ public class NetPlayer {
 		this.score=score;		
 	}
 
+	public int getInit(){
+		return score;
+	}
+	
+	/**
+	 * Sets the score of the player
+	 * @param score
+	 */
+	public void setInit(int initPosition){
+		this.initPosition=initPosition;		
+	}
 
 	/**
 	 * Returns the direction of the player
@@ -201,7 +212,8 @@ public class NetPlayer {
 		retval+=x+" ";
 		retval+=y+" ";
 		retval+=directionTank+" ";
-		retval+=team+" ";	
+		retval+=team+" ";
+		retval+=initPosition+" ";	
 		retval+=health;		
 		return retval;
 	}	

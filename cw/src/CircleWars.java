@@ -50,7 +50,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	/**
 	 * Player position, speed etc.
 	 */
-	int x=1200,y=700, xspeed=4,yspeed=4,prevX,prevY;
+	int x=0,y=0, xspeed=4,yspeed=4,prevX,prevY;
 
 
 	/*
@@ -61,6 +61,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	int team = 0;//0 ay RED team, 1 ay Green Team
 	int health = 3; //
 	int total;
+	int initPosition = 0;
 	/*
 	if(team==0){
 	int x=500,y=400;
@@ -287,10 +288,12 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 						int y = Integer.parseInt(playerInfo[3]);
 						int directionTank = Integer.parseInt(playerInfo[4]);
 						int team = Integer.parseInt(playerInfo[5]);
-						int health = Integer.parseInt(playerInfo[6].trim());
+						int initPosition = Integer.parseInt(playerInfo[6]);
+						int health = Integer.parseInt(playerInfo[7].trim());
 
 						total = playersInfo.length;
 						team = i%2;
+						this.team=team;
 						System.out.println("THE CURRENT TEAM: "+team+"| TOTAL: "+total);
 					//draw on the offscreen image
 						//nagdrawing ng oval
@@ -324,8 +327,10 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 							*/	
 
 							 if(team == 0){
+							 	if(initPosition<2){
 							 	x = 100;
-							 	y = 100;
+							 	y = 80;
+							 	}
 
 								if(directionTank==1){				
 									offscreen.getGraphics().drawImage(imgEnemyDown, x, y, 100, 100, this);
@@ -344,9 +349,10 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 									}
 								}
 								else if(team==1){
-								x = 900;
-								y = 400;
-
+									if(initPosition<2){
+										x = 900;
+										y = 400;
+										}
 									if(directionTank==1){				
 									offscreen.getGraphics().drawImage(imgUp, x, y, 100, 100, this);
 									}
@@ -411,81 +417,70 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	 */
 	public void paintComponent(Graphics g){
 		g.drawImage(offscreen, 0, 0, null);
-
-
-		/* for indiv player
-		//dito inuupdate ung para sa player para makagalaw sia.
 		try {
 		       
    		       //use this 
-		        BufferedImage imgUp = ImageIO.read(new File("tanks/tankUp.gif"));
-		        BufferedImage imgDown = ImageIO.read(new File("tanks/tankDown.gif"));
-		        BufferedImage imgLeft = ImageIO.read(new File("tanks/tankLeft.gif"));
-		        BufferedImage imgRight = ImageIO.read(new File("tanks/tankRight.gif"));
-
-		       
-		    switch (directionTank) {		
-			case 1:				
-				g.drawImage(imgDown, x, y, 100, 100, this);
-				break;
-
-			case 2:
-				g.drawImage(imgUp, x, y, 100, 100, this);
-				break;
-			
-			case 3:
-				g.drawImage(imgLeft, x, y, 100, 100, this);
-				break;
-
-			case 4:
-				g.drawImage(imgRight, x, y, 100, 100, this);
-				break;
-			}
-
-
-		    } catch (Exception ex){
+		        BufferedImage water = ImageIO.read(new File("tanks/water.jpg"));
+		       	g.drawImage(water, 0, 200, 1100, 200, this);
+		        } catch (Exception ex){
 		        ex.printStackTrace();
-		    }*/
-	}
-	
-	/*
-	class MouseMotionHandler extends MouseMotionAdapter{
-		public void mouseMoved(MouseEvent me){
-			x=me.getX();y=me.getY();
-			if (prevX != x || prevY != y){
-				send("PLAYER "+name+" "+x+" "+y+" "+directionTank);
-			}				
+		    }
 		}
-	}
-	*/
 
 
 
 	//eto ung para sa motion
 	class KeyHandler extends KeyAdapter{
 		public void keyPressed(KeyEvent ke){
+			
+			if(initPosition==0 && team==0){
+				x = 100;
+				y = 80;
+				System.out.println("team 1x: "+x+" y: "+y);
+			}
+			if(initPosition==0 && team==1){
+				x = 900;
+				y = 400;
+				System.out.println("team2 x: "+x+" y: "+y);
+			}
+
 			prevX=x;prevY=y;
 			switch (ke.getKeyCode()){
 			case KeyEvent.VK_DOWN:
-				y+=yspeed;
+				//if(team!=1 && y<=100){
+					y+=yspeed;
+				
+
 				directionTank=1;
-				System.out.println("DOWN !!!");
+				initPosition+=1;
+
 				break;
 			case KeyEvent.VK_UP:
-				y-=yspeed;
+				
+				//if(team!=0 && y>=200){
+					y-=yspeed;
+				//}
+
+
 				directionTank=2;
+				initPosition+=1;
 				break;
 			case KeyEvent.VK_LEFT:
 				x-=xspeed;
 				directionTank=3;
+				initPosition+=1;
 				break;
 			case KeyEvent.VK_RIGHT:
 				x+=xspeed;
 				directionTank=4;
+				initPosition+=1;
 				break;
 			}
+
+
+
 			if (prevX != x || prevY != y){
-				send("PLAYER "+name+" "+x+" "+y+" "+directionTank+" "+team+" "+health);
+				send("PLAYER "+name+" "+x+" "+y+" "+directionTank+" "+team+" "+initPosition+" "+health);
 			}	
 		}
 	}
