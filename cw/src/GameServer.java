@@ -53,17 +53,17 @@ public class GameServer implements Runnable, Constants{
 	Thread t = new Thread(this);
 	
 	float timeOut;
-	float secondsPassed;
+	float origTime;
 	Timer timer;
 	
 	TimerTask task = new TimerTask(){
 		public void run(){
-			secondsPassed++;
-			System.out.println("Second Passed: " + secondsPassed);
-			if (secondsPassed == timeOut){
+			timeOut--;
+			broadcast("SECONDS_REMAINING " + timeOut + " " + origTime);
+			if (timeOut == 0){
 		   	  timer.cancel();
 
-		  	  secondsPassed = 0;
+		  	  timeOut = 0;
 
 		  	  System.out.println("Times Up!");
 		    }
@@ -82,8 +82,8 @@ public class GameServer implements Runnable, Constants{
 	public GameServer(int numPlayers, float numMinutes){
 		this.numPlayers = numPlayers;
 		this.timer = new Timer();
-		this.secondsPassed = 0;
 		this.timeOut = 60 * numMinutes;
+		this.origTime = timeOut;
 
 		try {
             serverSocket = new DatagramSocket(PORT);
@@ -161,6 +161,7 @@ public class GameServer implements Runnable, Constants{
 						if (playerData.startsWith("CONNECT")){
 							String tokens[] = playerData.split(" ");
 							NetPlayer player=new NetPlayer(tokens[1],packet.getAddress(),packet.getPort());
+							System.out.println("PACKET PORT THING: " + packet.getPort());
 							System.out.println("Player connected: "+tokens[1]);
 							game.update(tokens[1].trim(),player);
 							broadcast("CONNECTED "+tokens[1]);

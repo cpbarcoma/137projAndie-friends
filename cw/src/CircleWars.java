@@ -1,4 +1,5 @@
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -21,13 +22,19 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+
+// Randomly generating numbers for names at the start
+import java.util.Random;
+
 /**
  * The game client itself!
  * @author Joseph Anthony C. Hermocilla
@@ -104,10 +111,10 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 
 	// Additional UI elements
 	JPanel northPanel;
-	JPanel buttonPanel, scorePanel;
+	JPanel buttonPanel, scorePanel, timePanel;
 	JButton exitBtn, helpBtn;
 	JLabel redScore, blueScore, timeRem;
-	String redScoreTxt, blueScoreTxt, timeRemTxt;
+	String redScoreTxt, blueScoreTxt, timeRemTxt, origTime;
 
 	// South panel elements
 	JPanel southPanel;
@@ -115,16 +122,22 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	JButton[] instBtn = new JButton[5];
 	JLabel[] instText = new JLabel[5];
     
-	
+    // Used to randomly generate a "name"
+    Random rand = new Random();
+
+    TankDrawing td;
+    Hook hook;
+    Boolean isShooting = false;
+
 	/**
 	 * Basic constructor
 	 * @param server
 	 * @param name
 	 * @throws Exception
 	 */
-	public CircleWars(String server,String name) throws Exception{
-		this.server=server;
-		this.name=name;
+	public CircleWars(String server) throws Exception{
+		this.server = server;
+		this.name = JOptionPane.showInputDialog("Enter your name:");
 		
 		this.setLayout(new BorderLayout());
 
@@ -147,6 +160,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		
 		this.add(northPanel, BorderLayout.NORTH);
 		this.add(southPanel, BorderLayout.SOUTH);
+
 		frame.setFocusable(true);
 		frame.setVisible(true);
 		
@@ -157,33 +171,52 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		frame.addKeyListener(new KeyHandler());		
 		// frame.addMouseMotionListener(new MouseMotionHandler());
 
+		// add stuff to draw
+		td = new TankDrawing();
+		hook = new Hook();
+
 		//tiime to play
-		t.start();		
+		t.start();
 	}
 
 	// set up North panel
 	public JPanel setupNorth(JPanel np) {
 		redScoreTxt = "0";
 		blueScoreTxt = "0";
-		timeRemTxt = "0:00";
+		timeRemTxt = "";
 
+		// Button panel
 		buttonPanel = new JPanel();
+		buttonPanel.setBackground(new Color(52, 56, 63));
 		exitBtn = new JButton("EXIT");
+		exitBtn.setBackground(new Color(122, 122, 122));
+		exitBtn.setForeground(Color.WHITE);
 		helpBtn = new JButton("HELP");
+		helpBtn.setBackground(new Color(122, 122, 122));
+		helpBtn.setForeground(Color.WHITE);
 		buttonPanel.add(exitBtn);
 		buttonPanel.add(helpBtn);
 
+		// Score panel
 		scorePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		scorePanel.setBackground(new Color(52, 56, 63));
 		redScore = new JLabel("RED " + redScoreTxt);
+		redScore.setForeground(Color.RED);
 		blueScore = new JLabel(blueScoreTxt + " BLUE");
+		blueScore.setForeground(Color.CYAN);
 		scorePanel.add(redScore);
 		scorePanel.add(blueScore);
 		
+		// Time panel
+		timePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		timePanel.setBackground(new Color(52, 56, 63));
 		timeRem = new JLabel("TIME: " + timeRemTxt);
+		timeRem.setForeground(Color.WHITE);
+		timePanel.add(timeRem);
 
-		np.add(buttonPanel);
+		/*np.add(buttonPanel);
 		np.add(scorePanel);
-		np.add(timeRem);
+		np.add(timePanel);*/
 
 		return np;
 	}
@@ -207,7 +240,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 			sp.add(instBtn[i]);
 			sp.add(instText[i]);
 		}
-		return sp;
+		return sp; //WAHHHHH
 	}
 	
 	/**
@@ -252,9 +285,14 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 				System.out.println("Server Data:" +serverData);
 			}
 
+			// Check timer
+			if (serverData.startsWith("SECONDS_REMAINING")) {
+				String[] spl = serverData.split(" ");
+				timeRemTxt = spl[1];
+				origTime = spl[2];
 
-
-
+				timeRem.setText("TIME: " + timeRemTxt);
+			}
 
 
 			//Study the following kids. 
@@ -328,10 +366,95 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 						 }					
 					
 					}
+
 					//show the changes
 					frame.repaint();
 				}			
 			}			
+		}
+	}
+
+	public class TankDrawing {
+		public void render(Graphics g) {
+			try {
+				BufferedImage imgUp = ImageIO.read(new File("tanks/tankUp.gif"));
+		        BufferedImage imgDown = ImageIO.read(new File("tanks/tankDown.gif"));
+		        BufferedImage imgLeft = ImageIO.read(new File("tanks/tankLeft.gif"));
+		        BufferedImage imgRight = ImageIO.read(new File("tanks/tankRight.gif"));
+				switch (directionTank) {		
+				case 1:				
+					g.drawImage(imgDown, x, y, 100, 100, null);
+					break;
+
+				case 2:
+					g.drawImage(imgUp, x, y, 100, 100, null);
+					break;
+				
+				case 3:
+					g.drawImage(imgLeft, x, y, 100, 100, null);
+					break;
+
+				case 4:
+					g.drawImage(imgRight, x, y, 100, 100, null);
+					break;
+				}
+			} catch(Exception e){}
+		}
+	}
+
+	public class Hook{
+		int x, y, orig;
+		Boolean xreverse = false;
+		Boolean yreverse = false;
+
+		public void render(Graphics g) {
+			g.fillOval(this.x, this.y, 10, 10);
+		}
+
+		// side to side
+		public void xset(int x, int y) {
+			this.x += x;
+			this.y = y-20;
+		}
+
+		public void xreverse(int x, int y) {
+			this.x -= x;
+			this.y = y-20;
+		}
+
+		// shooting mode
+		public void yset(int x, int y) {
+			this.x = x;
+			this.y -= y;
+		}
+
+		public void yreverse(int x, int y) {
+			this.x = x;
+			this.y += y;
+		}
+
+		public int getx() {
+			return this.x;
+		}
+
+		public int gety() {
+			return this.y;
+		}
+
+		public void setXReverse(Boolean v) {
+			this.xreverse = v;
+		}
+
+		public Boolean getXReverse() {
+			return this.xreverse;
+		}
+
+		public void setYReverse(Boolean v) {
+			this.yreverse = v;
+		}
+
+		public Boolean getYReverse() {
+			return this.yreverse;
 		}
 	}
 	
@@ -339,58 +462,62 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	 * Repainting method
 	 */
 	public void paintComponent(Graphics g){
+		super.paintComponent(g);
 		g.drawImage(offscreen, 0, 0, null);
 
-
-
-		//dito inuupdate ung para sa player para makagalaw sia.
-		try {
-		       //ready the images
-		        /*BufferedImage imgUp = ImageIO.read(new File("images/RedTankU.gif"));
-		        BufferedImage imgDown = ImageIO.read(new File("images/RedTankD.gif"));
-		        BufferedImage imgLeft = ImageIO.read(new File("images/RedTankL.gif"));
-		        BufferedImage imgRight = ImageIO.read(new File("images/RedTankR.gif"));
-		        */
-
-		       //use this 
-		        BufferedImage imgUp = ImageIO.read(new File("tanks/tankUp.gif"));
-		        BufferedImage imgDown = ImageIO.read(new File("tanks/tankDown.gif"));
-		        BufferedImage imgLeft = ImageIO.read(new File("tanks/tankLeft.gif"));
-		        BufferedImage imgRight = ImageIO.read(new File("tanks/tankRight.gif"));
-
-		       
-		    switch (directionTank) {		
-			case 1:				
-				g.drawImage(imgDown, x, y, 100, 100, this);
-				break;
-
-			case 2:
-				g.drawImage(imgUp, x, y, 100, 100, this);
-				break;
-			
-			case 3:
-				g.drawImage(imgLeft, x, y, 100, 100, this);
-				break;
-
-			case 4:
-				g.drawImage(imgRight, x, y, 100, 100, this);
-				break;
+		td.render(g);
+		new Thread(new Runnable() {
+			public void run() {
+				// make this visible to all players
+				if (isShooting == false) {
+					if (hook.getXReverse() == false) {
+						while(hook.getx() < x+90) {
+							try {
+								if (isShooting == true) break;
+								hook.xset(1, y);
+								hook.render(g); // invokes paintComponent() again
+								Thread.sleep(200);
+							} catch(Exception e) {  }
+						}
+						hook.setXReverse(true);
+					} else {
+						while(hook.getx() > x) {
+							try {
+								if (isShooting == true) break;
+								hook.xreverse(1, y);
+								hook.render(g); // invokes paintComponent() again
+								Thread.sleep(200);
+							} catch(Exception e) {  }
+						}
+						hook.setXReverse(false);
+					}
+				} else { // shooting mode
+					if (hook.getYReverse() == false) {
+						while(hook.gety() > y-150) {
+							try {
+								hook.yset(hook.getx(), 1);
+								hook.render(g); // invokes paintComponent() again
+								Thread.sleep(200);
+							} catch(Exception e) {  }
+						}
+						hook.setYReverse(true);
+					} else {
+						while(hook.gety() < y) {
+							try {
+								hook.yreverse(hook.getx(), 1);
+								hook.render(g); // invokes paintComponent() again
+								Thread.sleep(200);
+							} catch(Exception e) {  }
+						}
+						hook.setYReverse(false);
+						isShooting = false;
+					}
+				}
 			}
-
-
-		    } catch (Exception ex){
-		        ex.printStackTrace();
-		    }
-	}
-	
-	
-	class MouseMotionHandler extends MouseMotionAdapter{
-		public void mouseMoved(MouseEvent me){
-			x=me.getX();y=me.getY();
-			if (prevX != x || prevY != y){
-				send("PLAYER "+name+" "+x+" "+y+" "+directionTank);
-			}				
-		}
+			
+		}).start();
+		frame.repaint();
+		
 	}
 
 	//eto ung para sa motion
@@ -400,6 +527,11 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 			switch (ke.getKeyCode()){
 			case KeyEvent.VK_DOWN:
 				y+=yspeed;
+
+				// check if crossing boundary
+					// should depend on teams
+				if (y > 150) y = 150;
+
 				directionTank=1;
 				break;
 			case KeyEvent.VK_UP:
@@ -414,6 +546,12 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 				x+=xspeed;
 				directionTank=4;
 				break;
+
+			// Temporary shoot button
+			case KeyEvent.VK_SLASH:
+				System.out.println("FIRE FIRE FIRE FIRE");
+				isShooting = true;
+				break;
 			}
 			if (prevX != x || prevY != y){
 				send("PLAYER "+name+" "+x+" "+y+" "+directionTank);
@@ -422,12 +560,12 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	}
 
 	public static void main(String args[]) throws Exception{
-		if (args.length != 2){
-			System.out.println("Usage: java -jar circlewars-client <server> <player name>");
+		if (args.length != 1){
+			System.out.println("Usage: java -jar circlewars-client <server>");
 			System.exit(1);
 		}
 
-		new CircleWars(args[0],args[1]);
+		new CircleWars(args[0]);
 
 
 	}
