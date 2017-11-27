@@ -167,7 +167,7 @@ public class GameServer implements Runnable, Constants{
 						if (playerData.startsWith("CONNECT")){
 							String tokens[] = playerData.split(" ");
 							NetPlayer player=new NetPlayer(tokens[1],packet.getAddress(),packet.getPort());
-							System.out.println("PACKET PORT THING: " + packet.getPort());
+							// System.out.println("PACKET PORT THING: " + packet.getPort());
 							System.out.println("Player connected: "+tokens[1]);
 							game.update(tokens[1].trim(),player);
 							broadcast("CONNECTED "+tokens[1]);
@@ -202,7 +202,7 @@ public class GameServer implements Runnable, Constants{
 						  //dagdag
 						  int directionTank = Integer.parseInt(playerInfo[4].trim());
 						  int team = Integer.parseInt(playerInfo[5].trim());
-						   int initPosition = Integer.parseInt(playerInfo[6].trim());
+						  int initPosition = Integer.parseInt(playerInfo[6].trim());
 						  int health = Integer.parseInt(playerInfo[7].trim());
 						  
 						//  System.out.println("Team parse from server: "+team);

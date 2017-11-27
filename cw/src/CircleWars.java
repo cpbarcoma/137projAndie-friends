@@ -66,13 +66,16 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	boolean alive=true;
 	int score=0, directionTank=2; //direction tank==2 ay tank na nakaturo upwards
 	int team = 0;//0 ay RED team, 1 ay Green Team
-	int health = 3; //
+	int health = 10; //
 	int total;
 	int initPosition = 0;
 	/*
 	if(team==0){
 	int x=500,y=400;
 	}*/
+
+	// for holding the players
+	String[] playerInfo, playersInfo;
 
 	/**
 	 * Game timer, handler receives data from server to update game state
@@ -221,9 +224,9 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		timeRem.setForeground(Color.WHITE);
 		timePanel.add(timeRem);
 
-		/*np.add(buttonPanel);
+		np.add(buttonPanel);
 		np.add(scorePanel);
-		np.add(timePanel);*/
+		np.add(timePanel);
 
 		return np;
 	}
@@ -318,9 +321,9 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 				  
 
 				if (serverData.startsWith("PLAYER")){
-					String[] playersInfo = serverData.split(":");
+					playersInfo = serverData.split(":");
 					for (int i=0;i<playersInfo.length;i++){
-						String[] playerInfo = playersInfo[i].split(" ");
+						playerInfo = playersInfo[i].split(" ");
 						String pname =playerInfo[1];
 						int x = Integer.parseInt(playerInfo[2]);
 						int y = Integer.parseInt(playerInfo[3]);
@@ -392,18 +395,18 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 										y = 400;
 										}
 									if(directionTank==1){				
-									offscreen.getGraphics().drawImage(imgUp, x, y, 100, 100, this);
+									offscreen.getGraphics().drawImage(imgEnemyUp, x, y, 100, 100, this);
 									}
 									if(directionTank==2){				
-										offscreen.getGraphics().drawImage(imgUp, x, y, 100, 100, this);
+										offscreen.getGraphics().drawImage(imgEnemyUp, x, y, 100, 100, this);
 										}
 									
 									if(directionTank==3){
-										offscreen.getGraphics().drawImage(imgLeft, x, y, 100, 100, this);
+										offscreen.getGraphics().drawImage(imgEnemyLeft, x, y, 100, 100, this);
 										}
 
 									if(directionTank==4){
-										offscreen.getGraphics().drawImage(imgRight, x, y, 100, 100, this);
+										offscreen.getGraphics().drawImage(imgEnemyRight, x, y, 100, 100, this);
 										}
 								}
 
@@ -411,15 +414,15 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 
 							
 							//DRAWs the health bars	
-							if(health==3){			
+							if(health >= 7 && health <= 10){			
 								offscreen.getGraphics().drawImage(green, x, y+100, 96, 12, this);
 								}
 							
-							if(health==2){
+							if(health >= 4 && health <= 6){
 								offscreen.getGraphics().drawImage(blue, x, y+100, 62, 12, this);
 								}
 
-							if(health==1){
+							if(health >= 1 && health <= 3){
 								offscreen.getGraphics().drawImage(red, x, y+100, 30, 12, this);
 								}
 							//Draws the health bars
@@ -582,8 +585,28 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 							try {
 								hook.yset(hook.getx(), 1);
 								hook.render(g); // invokes paintComponent() again
+
 								Thread.sleep(200);
 							} catch(Exception e) {  }
+						}
+						for (int i=0;i<playersInfo.length;i++){
+							playerInfo = playersInfo[i].split(" ");
+							String pname =playerInfo[1];
+							int x = Integer.parseInt(playerInfo[2]);
+							int y = Integer.parseInt(playerInfo[3]);
+							int directionTank = Integer.parseInt(playerInfo[4]);
+							int team = Integer.parseInt(playerInfo[5]);
+							int initPosition = Integer.parseInt(playerInfo[6]);
+							int health = Integer.parseInt(playerInfo[7].trim());
+
+							if (hook.getx() >= x
+								&& hook.getx() <= x+100 
+								&& hook.gety() >= y
+								&& hook.gety() <= y+100) {
+								health -=1;
+								System.out.println("YOU JUST GOT SHOOKT");
+								send("PLAYER "+pname+" "+x+" "+y+" "+directionTank+" "+team+" "+initPosition+" "+health);
+							}
 						}
 						hook.setYReverse(true);
 					} else {
