@@ -214,6 +214,9 @@ public class GameServer implements Runnable, Constants{
 						//  int temp = playerCount%2;
 						  player.setInit(initPosition);
 						  player.setTeam(team);
+						  if (player.getHealth() > health){
+						  	System.out.println("============== U GOT DAMAGE ==============");
+						  }
 						  player.setHealth(health);
 
 						//  System.out.println("Team parse from server: "+team+" mod: "+playerCount);

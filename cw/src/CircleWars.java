@@ -15,12 +15,15 @@ import java.net.InetAddress;
 /*
 dagdag
 */
+import java.awt.event.*;
+import java.awt.*;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.plaf.basic.BasicArrowButton;
 
 import java.awt.Color;
 import javax.swing.JFrame;
@@ -129,8 +132,8 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	// South panel elements
 	JPanel southPanel;
 	// Temporary solution: Buttons or pure text
-	JButton[] instBtn = new JButton[5];
-	JLabel[] instText = new JLabel[5];
+	BasicArrowButton[] instBtn = new BasicArrowButton[4];
+	JLabel instMove, instShoot;
     
     // Used to randomly generate a "name"
     Random rand = new Random();
@@ -147,7 +150,10 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	 */
 	public CircleWars(String server) throws Exception{
 		this.server = server;
-		this.name = JOptionPane.showInputDialog("Enter your name:");
+		this.name = JOptionPane.showInputDialog(null,
+												"Enter your name:",
+												"SHOOKT",
+												JOptionPane.PLAIN_MESSAGE);
 		
 		this.setLayout(new BorderLayout());
 
@@ -158,7 +164,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		
 		//Some gui stuff i hate.
 		frame.getContentPane().add(this);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.setSize(1100, 600);
 
 		// Set up additional UI elements
@@ -194,6 +200,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		redScoreTxt = "0";
 		blueScoreTxt = "0";
 		timeRemTxt = "";
+		HelpPanel helpPanel = new HelpPanel();
 
 		// Button panel
 		buttonPanel = new JPanel();
@@ -201,9 +208,33 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		exitBtn = new JButton("EXIT");
 		exitBtn.setBackground(new Color(122, 122, 122));
 		exitBtn.setForeground(Color.WHITE);
+		// Exiting the game
+		exitBtn.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				int exit = JOptionPane.showConfirmDialog(frame,
+					"Are you sure you want to exit the game?",
+					"Exit",
+					JOptionPane.YES_NO_OPTION);
+				if (exit == 0) {
+					frame.dispose();
+					System.exit(0);
+				}
+			}
+		});
+
 		helpBtn = new JButton("HELP");
 		helpBtn.setBackground(new Color(122, 122, 122));
 		helpBtn.setForeground(Color.WHITE);
+		// Opening a new window/showing game mechanics
+		helpBtn.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				JOptionPane.showMessageDialog(frame,
+					helpPanel.getPanel(),
+					"INSTRUCTIONS",
+					JOptionPane.PLAIN_MESSAGE);
+			}
+		});
+
 		buttonPanel.add(exitBtn);
 		buttonPanel.add(helpBtn);
 
@@ -234,22 +265,42 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	// set up South panel
 	public JPanel setupSouth(JPanel sp) {
 		// Instructions: buttons and text
-		instBtn[0] = new JButton("UP");
-		instBtn[1] = new JButton("DOWN");
-		instBtn[2] = new JButton("LEFT");
-		instBtn[3] = new JButton("RIGHT");
-		instBtn[4] = new JButton("E");
+		// get pictures of arrow buttons
+		instBtn[0] = new BasicArrowButton(BasicArrowButton.NORTH,
+											new Color(122, 122, 122),
+											new Color(122, 122, 122),
+											Color.WHITE,
+											new Color(132, 132, 132));
+		instBtn[1] = new BasicArrowButton(BasicArrowButton.SOUTH,
+											new Color(122, 122, 122),
+											new Color(122, 122, 122),
+											Color.WHITE,
+											new Color(132, 132, 132));
+		instBtn[2] = new BasicArrowButton(BasicArrowButton.WEST,
+											new Color(122, 122, 122),
+											new Color(122, 122, 122),
+											Color.WHITE,
+											new Color(132, 132, 132));
+		instBtn[3] = new BasicArrowButton(BasicArrowButton.EAST,
+											new Color(122, 122, 122),
+											new Color(122, 122, 122),
+											Color.WHITE,
+											new Color(132, 132, 132));
 
-		instText[0] = new JLabel("UP");
-		instText[1] = new JLabel("LEFT");
-		instText[2] = new JLabel("DOWN");
-		instText[3] = new JLabel("RIGHT");
-		instText[4] = new JLabel("SHOOT");
+		instMove = new JLabel("MOVEMENT:");
+		instMove.setForeground(Color.WHITE);
+		instShoot = new JLabel("SHOOT: /");
+		instShoot.setForeground(Color.WHITE);
 
-		for (int i=0; i<5; i++) {
+		sp.add(instMove);
+		for (int i=0; i<4; i++) {
+			//instBtn[i].setBackground(new Color(122, 122, 122));
+			//instBtn[i].setForeground(Color.WHITE);
 			sp.add(instBtn[i]);
-			sp.add(instText[i]);
 		}
+		sp.add(instShoot);
+
+		sp.setBackground(new Color(52, 56, 63));
 		return sp; //WAHHHHH
 	}
 	
@@ -301,7 +352,13 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 				timeRemTxt = spl[1];
 				origTime = spl[2];
 
-				timeRem.setText("TIME: " + timeRemTxt);
+				if(Float.parseFloat(timeRemTxt) == 0) {
+					timeRem.setText("TIME'S UP!");
+					
+				} else {
+					timeRem.setText("TIME: " + timeRemTxt);
+				}
+
 			}
 
 
@@ -361,6 +418,9 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 					        BufferedImage blue = ImageIO.read(new File("tanks/2Life.gif"));
 					        BufferedImage red = ImageIO.read(new File("tanks/3Life.gif"));
 
+					        // BufferedImage water = ImageIO.read(new File("tanks/water.jpg"));
+	       					// offscreen.getGraphics().drawImage(water, 0, 200, 1100, 200, this);
+
 					        /*	
 						   	if(directionTank==0){	//default			
 								offscreen.getGraphics().drawImage(imgEnemyUp, x, y, 100, 100, this);
@@ -395,18 +455,18 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 										y = 400;
 										}
 									if(directionTank==1){				
-									offscreen.getGraphics().drawImage(imgEnemyUp, x, y, 100, 100, this);
+									offscreen.getGraphics().drawImage(imgUp, x, y, 100, 100, this);
 									}
 									if(directionTank==2){				
-										offscreen.getGraphics().drawImage(imgEnemyUp, x, y, 100, 100, this);
+										offscreen.getGraphics().drawImage(imgUp, x, y, 100, 100, this);
 										}
 									
 									if(directionTank==3){
-										offscreen.getGraphics().drawImage(imgEnemyLeft, x, y, 100, 100, this);
+										offscreen.getGraphics().drawImage(imgLeft, x, y, 100, 100, this);
 										}
 
 									if(directionTank==4){
-										offscreen.getGraphics().drawImage(imgEnemyRight, x, y, 100, 100, this);
+										offscreen.getGraphics().drawImage(imgRight, x, y, 100, 100, this);
 										}
 								}
 
@@ -446,6 +506,8 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 						 }					
 					
 					}
+
+					System.out.println("===================================");
 
 					//show the changes
 					frame.repaint();
@@ -539,7 +601,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	}
 
 	/**
-	 * Repainting method
+	 * Repainting method for THIS PLAYER ONLY!!
 	 */
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
@@ -547,11 +609,11 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		try {
 		       
 		       //use this 
-	        BufferedImage water = ImageIO.read(new File("tanks/water.jpg"));
+	       	BufferedImage water = ImageIO.read(new File("tanks/water.jpg"));
 	       	g.drawImage(water, 0, 200, 1100, 200, this);
-	        } catch (Exception ex){
-	        ex.printStackTrace();
-	    	}
+        } catch (Exception ex){
+        ex.printStackTrace();
+    	}
 
 		td.render(g);
 		new Thread(new Runnable() {
@@ -599,14 +661,17 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 							int initPosition = Integer.parseInt(playerInfo[6]);
 							int health = Integer.parseInt(playerInfo[7].trim());
 
+							// damage to other players
+							// must show on their own screens that they are getting hit
+							// problem w/ data being updated by send()?
 							if (hook.getx() >= x
 								&& hook.getx() <= x+100 
 								&& hook.gety() >= y
 								&& hook.gety() <= y+100) {
 								health -=1;
-								System.out.println("YOU JUST GOT SHOOKT");
-								send("PLAYER "+pname+" "+x+" "+y+" "+directionTank+" "+team+" "+initPosition+" "+health);
+								System.out.println("YOU JUST SHOOKT " + pname);
 							}
+							send("PLAYER "+pname+" "+x+" "+y+" "+directionTank+" "+team+" "+initPosition+" "+health);
 						}
 						hook.setYReverse(true);
 					} else {
