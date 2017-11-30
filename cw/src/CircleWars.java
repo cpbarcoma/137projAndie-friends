@@ -154,6 +154,10 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 												"Enter your name:",
 												"SHOOKT",
 												JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(frame,
+					new PopUp().getHelpPanel(),
+					"INSTRUCTIONS",
+					JOptionPane.PLAIN_MESSAGE);
 		
 		this.setLayout(new BorderLayout());
 
