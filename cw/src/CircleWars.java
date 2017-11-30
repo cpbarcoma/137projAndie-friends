@@ -68,7 +68,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	*/
 	boolean alive=true;
 	int score=0, directionTank=2; //direction tank==2 ay tank na nakaturo upwards
-	int team = 0;//0 ay RED team, 1 ay Green Team
+	int team = 0;//0 ay BLUE team, 1 ay RED team
 	int health = 10; //
 	int total;
 	int initPosition = 0;
@@ -719,32 +719,42 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 			prevX=x;prevY=y;
 			switch (ke.getKeyCode()){
 			case KeyEvent.VK_DOWN:
-				//if(team!=1 && y<=100){
+				if(team == 0 && y < 150){
 					y+=yspeed;
+				}
+				else if(team == 1 && y < 550){
+					y+=yspeed;
+				}
 
-				directionTank=1;
 				initPosition+=1;
-
+				directionTank=1;
 				break;
 			case KeyEvent.VK_UP:
-				
-				//if(team!=0 && y>=200){
+				if(team == 0 && y > 0){
 					y-=yspeed;
-				//}
+				}
+				else if(team == 1 && y > 350){
+					y-=yspeed;
+				}
 
-
-				directionTank=2;
 				initPosition+=1;
+				directionTank=2;
 				break;
 			case KeyEvent.VK_LEFT:
-				x-=xspeed;
-				directionTank=3;
+				if(x > 0){
+					x-=xspeed;
+				}
+
 				initPosition+=1;
+				directionTank=3;
 				break;
 			case KeyEvent.VK_RIGHT:
-				x+=xspeed;
-				directionTank=4;
+				if(x < 1050){
+					x+=xspeed;
+				}
+
 				initPosition+=1;
+				directionTank=4;
 				break;
 
 			// Temporary shoot button
