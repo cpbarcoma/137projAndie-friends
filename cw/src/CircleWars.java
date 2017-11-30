@@ -200,7 +200,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		redScoreTxt = "0";
 		blueScoreTxt = "0";
 		timeRemTxt = "";
-		HelpPanel helpPanel = new HelpPanel();
+		PopUp helpPanel = new PopUp();
 
 		// Button panel
 		buttonPanel = new JPanel();
@@ -229,7 +229,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		helpBtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				JOptionPane.showMessageDialog(frame,
-					helpPanel.getPanel(),
+					helpPanel.getHelpPanel(),
 					"INSTRUCTIONS",
 					JOptionPane.PLAIN_MESSAGE);
 			}
@@ -294,8 +294,6 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 
 		sp.add(instMove);
 		for (int i=0; i<4; i++) {
-			//instBtn[i].setBackground(new Color(122, 122, 122));
-			//instBtn[i].setForeground(Color.WHITE);
 			sp.add(instBtn[i]);
 		}
 		sp.add(instShoot);
@@ -354,7 +352,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 
 				if(Float.parseFloat(timeRemTxt) == 0) {
 					timeRem.setText("TIME'S UP!");
-					
+					showEndGamePopUp();
 				} else {
 					timeRem.setText("TIME: " + timeRemTxt);
 				}
@@ -389,6 +387,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 						int initPosition = Integer.parseInt(playerInfo[6]);
 						int health = Integer.parseInt(playerInfo[7].trim());
 
+						// may error sa pagseset ng team sa server
 						total = playersInfo.length;
 						team = i%2;
 						this.team=team;
@@ -427,7 +426,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 								}
 							*/	
 
-							 if(team == 0){
+							if(team == 0){ // blue
 							 	if(initPosition<2){
 							 	x = 100;
 							 	y = 80;
@@ -448,27 +447,26 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 								if(directionTank==4){
 									offscreen.getGraphics().drawImage(imgEnemyRight, x, y, 100, 100, this);
 									}
+							} else if(team==1){
+								if(initPosition<2){
+									x = 900;
+									y = 400;
+									}
+								if(directionTank==1){				
+									offscreen.getGraphics().drawImage(imgUp, x, y, 100, 100, this);
 								}
-								else if(team==1){
-									if(initPosition<2){
-										x = 900;
-										y = 400;
-										}
-									if(directionTank==1){				
+								if(directionTank==2){				
 									offscreen.getGraphics().drawImage(imgUp, x, y, 100, 100, this);
 									}
-									if(directionTank==2){				
-										offscreen.getGraphics().drawImage(imgUp, x, y, 100, 100, this);
-										}
-									
-									if(directionTank==3){
-										offscreen.getGraphics().drawImage(imgLeft, x, y, 100, 100, this);
-										}
+								
+								if(directionTank==3){
+									offscreen.getGraphics().drawImage(imgLeft, x, y, 100, 100, this);
+									}
 
-									if(directionTank==4){
-										offscreen.getGraphics().drawImage(imgRight, x, y, 100, 100, this);
-										}
-								}
+								if(directionTank==4){
+									offscreen.getGraphics().drawImage(imgRight, x, y, 100, 100, this);
+									}
+							}
 
 
 
@@ -514,6 +512,16 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 				}			
 			}			
 		}
+	}
+
+	public void showEndGamePopUp() {
+		PopUp endGame = new PopUp();
+		endGame.setWinner(1); // FIX: Should get actual winner
+		endGame.setPlayers(playersInfo);
+		JOptionPane.showMessageDialog(frame,
+			endGame.getEndPanel(),
+			"GAME END",
+			JOptionPane.PLAIN_MESSAGE);
 	}
 
 	public class TankDrawing {
