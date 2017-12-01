@@ -8,6 +8,10 @@ public class PopUp extends JPanel{
 	JPanel panel; // this panel that will be returned
 	int winner; // winning team
 
+	// used for Help Panel
+	JLabel instLabel;
+	JTextArea instructions;
+
 	// used for End Panel
 	JPanel northPanel, centerPanel;
 	JLabel endLabel, winnerTeam;
@@ -16,7 +20,14 @@ public class PopUp extends JPanel{
 
 	public JPanel getHelpPanel() {
 		this.panel = new JPanel(new BorderLayout());
-		JTextArea instructions = new JTextArea(
+		this.panel.setPreferredSize(new Dimension(500, 200));
+
+		instLabel = new JLabel("INSTRUCTIONS", SwingConstants.CENTER);
+		instLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 30));
+		instLabel.setForeground(Color.WHITE);
+		instLabel.setBackground(new Color(52, 56, 63));
+
+		instructions = new JTextArea(
 			"1. Move your character around using the arrow keys on your keyboard.\n\n" +
 			"2. You cannot cross the river.\n\n" +
 			"3. Shookt the other team's players by using the [ / ] button.\n\n" +
@@ -26,6 +37,7 @@ public class PopUp extends JPanel{
 		instructions.setFont(new Font(Font.DIALOG, Font.BOLD, 12));
 		instructions.setBackground(new Color(52, 56, 63));
 		instructions.setForeground(Color.WHITE);
+		this.panel.add(instLabel, BorderLayout.NORTH);
 		this.panel.add(instructions, BorderLayout.CENTER);
 		return this.panel;
 	}
@@ -34,19 +46,20 @@ public class PopUp extends JPanel{
 	public JPanel getEndPanel() {
 		this.panel = new JPanel(new BorderLayout());
 		this.panel.setBackground(new Color(52, 56, 63));
+		this.panel.setPreferredSize(new Dimension(500, 200));
 
 		// set up north panel: contains title and game winner
-		setupNorth();
+		setupEndNorth();
 
 		// set up center panel: contains stats of the players
-		setupCenter();
+		setupEndCenter();
 
 		this.panel.add(northPanel, BorderLayout.NORTH);
 		this.panel.add(centerPanel, BorderLayout.CENTER);
 		return this.panel;
 	}
 
-	public void setupNorth(){
+	public void setupEndNorth(){
 		northPanel = new JPanel(new GridLayout(2, 1));
 		northPanel.setOpaque(false);
 
@@ -68,7 +81,7 @@ public class PopUp extends JPanel{
 		northPanel.add(winnerTeam, BorderLayout.CENTER);
 	}
 
-	public void setupCenter() {
+	public void setupEndCenter() {
 		// get player info and put them into a gridLayout
 
 		centerPanel = new JPanel(new GridLayout(players.length+1, 3));

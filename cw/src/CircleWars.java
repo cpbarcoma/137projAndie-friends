@@ -88,7 +88,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	/**
 	 * Nice name!
 	 */
-	String name="Joseph";
+	String name="";
 	
 	/**
 	 * Player name of others
@@ -150,10 +150,13 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	 */
 	public CircleWars(String server) throws Exception{
 		this.server = server;
-		this.name = JOptionPane.showInputDialog(null,
-												"Enter your name:",
-												"SHOOKT",
-												JOptionPane.PLAIN_MESSAGE);
+		while (this.name.equals("")) {
+			this.name = JOptionPane.showInputDialog(null,
+													"Enter your name:",
+													"SHOOKT",
+													JOptionPane.PLAIN_MESSAGE);
+		}
+
 		JOptionPane.showMessageDialog(frame,
 					new PopUp().getHelpPanel(),
 					"INSTRUCTIONS",
@@ -222,6 +225,8 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 				if (exit == 0) {
 					frame.dispose();
 					System.exit(0);
+				} else {
+					frame.setFocusable(true);
 				}
 			}
 		});
@@ -232,10 +237,16 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		// Opening a new window/showing game mechanics
 		helpBtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				JOptionPane.showMessageDialog(frame,
+				int choice = JOptionPane.showConfirmDialog(frame,
 					helpPanel.getHelpPanel(),
 					"INSTRUCTIONS",
 					JOptionPane.PLAIN_MESSAGE);
+				if (choice == JOptionPane.CLOSED_OPTION
+					|| choice == JOptionPane.CANCEL_OPTION
+					|| choice == JOptionPane.YES_OPTION
+					|| choice == JOptionPane.NO_OPTION) {
+					frame.setFocusable(true);
+				}
 			}
 		});
 
@@ -631,71 +642,145 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		new Thread(new Runnable() {
 			public void run() {
 				// make this visible to all players
-				if (isShooting == false) {
-					if (hook.getXReverse() == false) {
-						while(hook.getx() < x+90) {
-							try {
-								if (isShooting == true) break;
-								hook.xset(1, y);
-								hook.render(g); // invokes paintComponent() again
-								Thread.sleep(200);
-							} catch(Exception e) {  }
-						}
-						hook.setXReverse(true);
-					} else {
-						while(hook.getx() > x) {
-							try {
-								if (isShooting == true) break;
-								hook.xreverse(1, y);
-								hook.render(g); // invokes paintComponent() again
-								Thread.sleep(200);
-							} catch(Exception e) {  }
-						}
-						hook.setXReverse(false);
-					}
-				} else { // shooting mode
-					if (hook.getYReverse() == false) {
-						while(hook.gety() > y-150) {
-							try {
-								hook.yset(hook.getx(), 1);
-								hook.render(g); // invokes paintComponent() again
-
-								Thread.sleep(200);
-							} catch(Exception e) {  }
-						}
-						for (int i=0;i<playersInfo.length;i++){
-							playerInfo = playersInfo[i].split(" ");
-							String pname =playerInfo[1];
-							int x = Integer.parseInt(playerInfo[2]);
-							int y = Integer.parseInt(playerInfo[3]);
-							int directionTank = Integer.parseInt(playerInfo[4]);
-							int team = Integer.parseInt(playerInfo[5]);
-							int initPosition = Integer.parseInt(playerInfo[6]);
-							int health = Integer.parseInt(playerInfo[7].trim());
-
-							// damage to other players
-							// must show on their own screens that they are getting hit
-							// problem w/ data being updated by send()?
-							if (hook.getx() >= x
-								&& hook.getx() <= x+100 
-								&& hook.gety() >= y
-								&& hook.gety() <= y+100) {
-								health -=1;
-								System.out.println("YOU JUST SHOOKT " + pname);
+				if (team == 1) { // for red team
+					if (isShooting == false) {
+						if (hook.getXReverse() == false) {
+							while(hook.getx() < x+90) {
+								try {
+									if (isShooting == true) break;
+									hook.xset(1, y);
+									hook.render(g); // invokes paintComponent() again
+									Thread.sleep(200);
+								} catch(Exception e) {  }
 							}
-							send("PLAYER "+pname+" "+x+" "+y+" "+directionTank+" "+team+" "+initPosition+" "+health);
+							hook.setXReverse(true);
+						} else {
+							while(hook.getx() > x) {
+								try {
+									if (isShooting == true) break;
+									hook.xreverse(1, y);
+									hook.render(g); // invokes paintComponent() again
+									Thread.sleep(200);
+								} catch(Exception e) {  }
+							}
+							hook.setXReverse(false);
 						}
-						hook.setYReverse(true);
-					} else {
-						while(hook.gety() < y) {
-							try {
-								hook.yreverse(hook.getx(), 1);
-								hook.render(g); // invokes paintComponent() again
-								Thread.sleep(200);
-							} catch(Exception e) {  }
+					} else { // shooting mode
+						if (hook.getYReverse() == false) {
+							while(hook.gety() > y-300) {
+								try {
+									hook.yset(hook.getx(), 1);
+									hook.render(g); // invokes paintComponent() again
+
+									Thread.sleep(200);
+								} catch(Exception e) {  }
+							}
+							for (int i=0;i<playersInfo.length;i++){
+								playerInfo = playersInfo[i].split(" ");
+								String pname =playerInfo[1];
+								int x = Integer.parseInt(playerInfo[2]);
+								int y = Integer.parseInt(playerInfo[3]);
+								int directionTank = Integer.parseInt(playerInfo[4]);
+								int team = Integer.parseInt(playerInfo[5]);
+								int initPosition = Integer.parseInt(playerInfo[6]);
+								int health = Integer.parseInt(playerInfo[7].trim());
+
+								// damage to other players
+								// must show on their own screens that they are getting hit
+								// problem w/ data being updated by send()?
+								if (hook.getx() >= x
+									&& hook.getx() <= x+100 
+									&& hook.gety() >= y
+									&& hook.gety() <= y+100) {
+									health -=1;
+									System.out.println("YOU JUST SHOOKT " + pname);
+								}
+								send("PLAYER "+pname+" "+x+" "+y+" "+directionTank+" "+team+" "+initPosition+" "+health);
+							}
+							hook.setYReverse(true);
+						} else {
+							while(hook.gety() < y) {
+								try {
+									hook.yreverse(hook.getx(), 1);
+									hook.render(g); // invokes paintComponent() again
+									Thread.sleep(200);
+								} catch(Exception e) {  }
+							}
+							hook.setYReverse(false);
+							isShooting = false;
 						}
-						hook.setYReverse(false);
-						isShooting = false;
+					}
+				}
+
+
+				else if (team == 0) { // for blue team, who shoots downwards
+					int orig = y+100;
+					if (isShooting == false) {
+						if (hook.getXReverse() == false) {
+							while(hook.getx() < x+90) {
+								try {
+									if (isShooting == true) break;
+									hook.xset(1, orig);
+									hook.render(g); // invokes paintComponent() again
+									Thread.sleep(200);
+								} catch(Exception e) {  }
+							}
+							hook.setXReverse(true);
+						} else {
+							while(hook.getx() > x) {
+								try {
+									if (isShooting == true) break;
+									hook.xreverse(1, orig);
+									hook.render(g); // invokes paintComponent() again
+									Thread.sleep(200);
+								} catch(Exception e) {  }
+							}
+							hook.setXReverse(false);
+						}
+					} else { // shooting mode
+						if (hook.getYReverse() == false) {
+							while(hook.gety() < orig+300) {
+								try {
+									hook.yreverse(hook.getx(), 1);
+									hook.render(g); // invokes paintComponent() again
+
+									Thread.sleep(200);
+								} catch(Exception e) {  }
+							}
+							for (int i=0;i<playersInfo.length;i++){
+								playerInfo = playersInfo[i].split(" ");
+								String pname =playerInfo[1];
+								int x = Integer.parseInt(playerInfo[2]);
+								int y = Integer.parseInt(playerInfo[3]);
+								int directionTank = Integer.parseInt(playerInfo[4]);
+								int team = Integer.parseInt(playerInfo[5]);
+								int initPosition = Integer.parseInt(playerInfo[6]);
+								int health = Integer.parseInt(playerInfo[7].trim());
+
+								// damage to other players
+								// must show on their own screens that they are getting hit
+								// problem w/ data being updated by send()?
+								if (hook.getx() >= x
+									&& hook.getx() <= x+100 
+									&& hook.gety() >= orig
+									&& hook.gety() <= orig+300) {
+									health -=1;
+									System.out.println("YOU JUST SHOOKT " + pname);
+								}
+								send("PLAYER "+pname+" "+x+" "+y+" "+directionTank+" "+team+" "+initPosition+" "+health);
+							}
+							hook.setYReverse(true);
+						} else {
+							while(hook.gety() > orig) {
+								try {
+									hook.yset(hook.getx(), 1);
+									hook.render(g); // invokes paintComponent() again
+									Thread.sleep(200);
+								} catch(Exception e) {  }
+							}
+							hook.setYReverse(false);
+							isShooting = false;
+						}
 					}
 				}
 			}
