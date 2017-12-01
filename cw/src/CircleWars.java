@@ -867,6 +867,9 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 			System.exit(1);
 		}
 
+		Thread t = new ChatClient();
+		t.start();
+
 		new CircleWars(args[0]);
 
 
