@@ -66,6 +66,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	/*
 	new specs for tank
 	*/
+	boolean canShoot = true;
 	boolean alive=true;
 	int score=0, directionTank=2; //direction tank==2 ay tank na nakaturo upwards
 	int team = 0;//0 ay BLUE team, 1 ay RED team
@@ -712,6 +713,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 							}
 							hook.setYReverse(false);
 							isShooting = false;
+							canShoot = true;
 						}
 					}
 				}
@@ -784,6 +786,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 							}
 							hook.setYReverse(false);
 							isShooting = false;
+							canShoot = true;
 						}
 					}
 				}
@@ -834,20 +837,22 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 				directionTank=2;
 				break;
 			case KeyEvent.VK_LEFT:
-				if(x > 0){
+				if(x > 0 && isShooting == false){
 					x-=xspeed;
 				}
 
 				initPosition+=1;
 				directionTank=3;
+				canShoot = false;
 				break;
 			case KeyEvent.VK_RIGHT:
-				if(x < 1050){
+				if(x < 1050 && isShooting = false){
 					x+=xspeed;
 				}
 
 				initPosition+=1;
 				directionTank=4;
+				canShoot = false;
 				break;
 
 			// Temporary shoot button
