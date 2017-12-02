@@ -3,22 +3,26 @@ import java.io.*;
 import java.util.Scanner;
 
 public class ChatClient extends Thread{
-	public static String clientName = "testNAME";
+	public static String clientName = "";
+	public String serverName = "";
+	int port;
 
-	public ChatClient(){
+	public ChatClient(String server, String name, String portno){
+		this.serverName = server;
+		this.clientName = name;		
+		this.port = Integer.parseInt(portno);
 		System.out.println("Chat Client created!");
-
 	}
 
 	public void run(){
 		try{
             //String serverName = args[0]; //get IP address of server from first param
-			String serverName = "127.0.0.1";
+			//String serverName = "127.0.0.1";
             //int port = Integer.parseInt(args[1]); //get port from second param
             //String message = args[2]; //get message from the third param
             //clientName = args[2];
 	
-			int port = 1111;
+			
 
             String message;
             Scanner scan = new Scanner(System.in);

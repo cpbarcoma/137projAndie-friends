@@ -242,13 +242,12 @@ public class GameServer implements Runnable, Constants{
 	}	
 
 	public static void main(String args[]){
-		if (args.length != 2){
-			System.out.println("Usage: java -jar circlewars-server <number of players> <number of minutes>");
+		if (args.length != 3){
+			System.out.println("Usage: java -jar circlewars-server <number of players> <number of minutes> <portno>");
 			System.exit(1);
 		}
 
-		//Thread chatThread = new ChatServer(1111);
-		Thread t = new ChatServer(1111);
+		Thread t = new ChatServer(Integer.parseInt(args[2]));
 		t.start();
 		
 		new GameServer(Integer.parseInt(args[0]), Float.parseFloat(args[1]));
