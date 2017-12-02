@@ -1,4 +1,4 @@
 javac *.java && jar cvfe circlewars-server.jar GameServer *.class && jar cvfe circlewars-client.jar CircleWars *.class
 
-java -jar circlewars-server.jar <players> <minutes>
-java -jar circlewars-client.jar <server_IP> <name>
+java -jar circlewars-server.jar 2 5
+java -jar circlewars-client.jar localhost jach
