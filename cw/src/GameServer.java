@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
 // Imports for Timer
 import java.util.Timer;
 import java.util.TimerTask;
@@ -46,7 +50,12 @@ public class GameServer implements Runnable, Constants{
 	 * Number of players
 	 */
 	int numPlayers;
-	
+
+	/**
+	 * For Chat TCP
+	 */
+	//private ServerSocket serverSocketChat;              
+    //public static ArrayList threads = new ArrayList<ServerThread>();   
 
 	public int getNumPlayers(){
 		return numPlayers;
@@ -65,7 +74,7 @@ public class GameServer implements Runnable, Constants{
 	TimerTask task = new TimerTask(){
 		public void run(){
 			timeOut--;
-			broadcast("SECONDS_REMAINING " + timeOut + " " + origTime);
+			//broadcast("SECONDS_REMAINING " + timeOut + " " + origTime);
 			if (timeOut == 0){
 		   	  timer.cancel();
 
@@ -94,6 +103,7 @@ public class GameServer implements Runnable, Constants{
 		try {
             serverSocket = new DatagramSocket(PORT);
 			serverSocket.setSoTimeout(100);
+			System.out.println("UDP socket created");
 		} catch (IOException e) {
             System.err.println("Could not listen on port: "+PORT);
             System.exit(-1);
@@ -236,8 +246,20 @@ public class GameServer implements Runnable, Constants{
 			System.out.println("Usage: java -jar circlewars-server <number of players> <number of minutes>");
 			System.exit(1);
 		}
+
+		//Thread chatThread = new ChatServer(1111);
+		Thread t = new ChatServer(1111);
+		t.start();
 		
 		new GameServer(Integer.parseInt(args[0]), Float.parseFloat(args[1]));
 	}
+
+
+
+
+
+
+
+
 }
 
