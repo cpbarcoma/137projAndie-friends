@@ -418,15 +418,15 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 							//kelangan ilagay to para me tank rin ung kabilang team.
 							offscreen.getGraphics().drawImage(imgEnemy, x, y, 100, 100, this);
 							*///old
-							 BufferedImage imgUp = ImageIO.read(new File("tanks/tankUp.gif"));
-					        BufferedImage imgDown = ImageIO.read(new File("tanks/tankDown.gif"));
-					        BufferedImage imgLeft = ImageIO.read(new File("tanks/tankLeft.gif"));
-					        BufferedImage imgRight = ImageIO.read(new File("tanks/tankRight.gif"));
+							BufferedImage imgUp = ImageIO.read(new File("tanks/tankRu.png"));
+					        BufferedImage imgDown = ImageIO.read(new File("tanks/tankRu.png"));
+					        BufferedImage imgLeft = ImageIO.read(new File("tanks/tankLeft.png"));
+					        BufferedImage imgRight = ImageIO.read(new File("tanks/tankRight.png"));
 
-							BufferedImage imgEnemyUp = ImageIO.read(new File("tanks/tankEnemyUp.gif"));
-					        BufferedImage imgEnemyDown = ImageIO.read(new File("tanks/tankEnemyDown.gif"));
-					        BufferedImage imgEnemyLeft = ImageIO.read(new File("tanks/tankEnemyLeft.gif"));
-					        BufferedImage imgEnemyRight = ImageIO.read(new File("tanks/tankEnemyRight.gif"));
+							BufferedImage imgEnemyUp = ImageIO.read(new File("tanks/tankEnemyDown.png"));
+					        BufferedImage imgEnemyDown = ImageIO.read(new File("tanks/tankEnemyDown.png"));
+					        BufferedImage imgEnemyLeft = ImageIO.read(new File("tanks/tankEnemyLeft.png"));
+					        BufferedImage imgEnemyRight = ImageIO.read(new File("tanks/tankEnemyRight.png"));
 
 		       				BufferedImage green = ImageIO.read(new File("tanks/fullLife.gif"));
 					        BufferedImage blue = ImageIO.read(new File("tanks/2Life.gif"));
@@ -542,10 +542,10 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	public class TankDrawing {
 		public void render(Graphics g) {
 			try {
-				BufferedImage imgUp = ImageIO.read(new File("tanks/tankUp.gif"));
-		        BufferedImage imgDown = ImageIO.read(new File("tanks/tankDown.gif"));
-		        BufferedImage imgLeft = ImageIO.read(new File("tanks/tankLeft.gif"));
-		        BufferedImage imgRight = ImageIO.read(new File("tanks/tankRight.gif"));
+				BufferedImage imgUp = ImageIO.read(new File("tanks/tankRu.png"));
+		        BufferedImage imgDown = ImageIO.read(new File("tanks/tankRu.png"));
+		        BufferedImage imgLeft = ImageIO.read(new File("tanks/tankLeft.png"));
+		        BufferedImage imgRight = ImageIO.read(new File("tanks/tankRight.png"));
 				switch (directionTank) {		
 				case 1:				
 					g.drawImage(imgDown, x, y, 100, 100, null);
@@ -631,9 +631,13 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		g.drawImage(offscreen, 0, 0, null);
 		try {
 		       
-		       //use this 
+		    //use this 
+	       	BufferedImage grass = ImageIO.read(new File("tanks/grass.png"));
+	       	g.drawImage(grass, 0, 0, 1100, 600, this);
 	       	BufferedImage water = ImageIO.read(new File("tanks/water.jpg"));
 	       	g.drawImage(water, 0, 200, 1100, 200, this);
+	       	
+        
         } catch (Exception ex){
         ex.printStackTrace();
     	}
