@@ -59,10 +59,10 @@ public class ChatServer extends Thread{
                     System.out.println(text); //readUTF waits for input
                     for(int i=0;i < threads.size(); i++) {
                         ServerThread c = (ServerThread)threads.get(i);
-                        if(!c.client.getRemoteSocketAddress().equals(this.client.getRemoteSocketAddress())){
+                        //if(!c.client.getRemoteSocketAddress().equals(this.client.getRemoteSocketAddress())){
                             DataOutputStream out = new DataOutputStream(c.client.getOutputStream());
                             out.writeUTF(this.text);
-                        }
+                        //}
                     }
     			} catch(IOException e){
 
