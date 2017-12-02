@@ -149,7 +149,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	 * @param name
 	 * @throws Exception
 	 */
-	public CircleWars(String server) throws Exception{
+	public CircleWars(String server, String portNo) throws Exception{
 		this.server = server;
 		while (this.name.equals("")) {
 			this.name = JOptionPane.showInputDialog(null,
@@ -157,6 +157,12 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 													"SHOOKT",
 													JOptionPane.PLAIN_MESSAGE);
 		}
+
+		/*
+		 * create chatClient
+		 */
+		Thread t = new ChatClient(server, name, portNo);
+		t.start();
 
 		JOptionPane.showMessageDialog(frame,
 					new PopUp().getHelpPanel(),
@@ -185,8 +191,9 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		this.add(northPanel, BorderLayout.NORTH);
 		this.add(southPanel, BorderLayout.SOUTH);
 
-		frame.setFocusable(true);
+		frame.setAlwaysOnTop(true);
 		frame.setVisible(true);
+		frame.requestFocus();
 		
 		//create the buffer
 		offscreen=(BufferedImage)this.createImage(1100, 600);
@@ -227,7 +234,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 					frame.dispose();
 					System.exit(0);
 				} else {
-					frame.setFocusable(true);
+					frame.requestFocus();
 				}
 			}
 		});
@@ -246,7 +253,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 					|| choice == JOptionPane.CANCEL_OPTION
 					|| choice == JOptionPane.YES_OPTION
 					|| choice == JOptionPane.NO_OPTION) {
-					frame.setFocusable(true);
+					frame.requestFocus();
 				}
 			}
 		});
@@ -871,15 +878,12 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	}
 
 	public static void main(String args[]) throws Exception{
-		if (args.length != 1){
-			System.out.println("Usage: java -jar circlewars-client <server>");
+		if (args.length != 2){
+			System.out.println("Usage: java -jar circlewars-client <server> <portno>");
 			System.exit(1);
 		}
 
-		Thread t = new ChatClient();
-		t.start();
-
-		new CircleWars(args[0]);
+		new CircleWars(args[0], args[1]);
 
 
 	}
