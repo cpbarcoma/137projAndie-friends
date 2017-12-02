@@ -161,8 +161,8 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		/*
 		 * create chatClient
 		 */
-		Thread t = new ChatClient(server, name, portNo);
-		t.start();
+		Thread th = new ChatClient(server, name, portNo);
+		th.start();
 
 		JOptionPane.showMessageDialog(frame,
 					new PopUp().getHelpPanel(),
@@ -203,7 +203,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		// frame.addMouseMotionListener(new MouseMotionHandler());
 
 		// add stuff to draw
-		td = new TankDrawing();
+		td = new TankDrawing(team);
 		hook = new Hook();
 
 		//tiime to play
@@ -548,12 +548,31 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	}
 
 	public class TankDrawing {
+		int team;
+		BufferedImage imgUp;
+        BufferedImage imgDown;
+        BufferedImage imgLeft;
+        BufferedImage imgRight;
+
+		public TankDrawing(int team){
+			this.team = team;
+		}
+
 		public void render(Graphics g) {
 			try {
-				BufferedImage imgUp = ImageIO.read(new File("tanks/tankRu.png"));
-		        BufferedImage imgDown = ImageIO.read(new File("tanks/tankRu.png"));
-		        BufferedImage imgLeft = ImageIO.read(new File("tanks/tankLeft.png"));
-		        BufferedImage imgRight = ImageIO.read(new File("tanks/tankRight.png"));
+				if(this.team == 0){
+					imgUp = ImageIO.read(new File("tanks/tankEnemyDown.png"));
+			        imgDown = ImageIO.read(new File("tanks/tankEnemyDown.png"));
+			        imgLeft = ImageIO.read(new File("tanks/tankEnemyLeft.png"));
+			        imgRight = ImageIO.read(new File("tanks/tankEnemyRight.png"));	
+				}
+				else if(this.team == 1){
+					imgUp = ImageIO.read(new File("tanks/tankRu.png"));
+			        imgDown = ImageIO.read(new File("tanks/tankRu.png"));
+			        imgLeft = ImageIO.read(new File("tanks/tankLeft.png"));
+			        imgRight = ImageIO.read(new File("tanks/tankRight.png"));
+				}
+				
 				switch (directionTank) {		
 				case 1:				
 					g.drawImage(imgDown, x, y, 100, 100, null);
