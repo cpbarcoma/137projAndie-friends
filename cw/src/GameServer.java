@@ -74,7 +74,7 @@ public class GameServer implements Runnable, Constants{
 	TimerTask task = new TimerTask(){
 		public void run(){
 			timeOut--;
-			//broadcast("SECONDS_REMAINING " + timeOut + " " + origTime);
+			broadcast("SECONDS_REMAINING " + timeOut + " " + origTime);
 			if (timeOut == 0){
 		   	  timer.cancel();
 
