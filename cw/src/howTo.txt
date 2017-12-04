@@ -1,8 +1,8 @@
-javac *.java && jar cvfe circlewars-server.jar GameServer *.class && jar cvfe circlewars-client.jar CircleWars *.class
+javac *.java && jar cvfe shookt-server.jar GameServer *.class && jar cvfe shookt-client.jar Shookt *.class
 
-java -jar circlewars-server.jar 2 5 1234
-java -jar circlewars-client.jar localhost 1234
+java -jar shookt-server.jar 2 5 1234
+java -jar shookt-client.jar localhost 1234
 
-java -jar circlewars-server.jar <players> <minutes> <portno>
-java -jar circlewars-client.jar <server add> <port no.>
+java -jar shookt-server.jar <players> <minutes> <portno>
+java -jar shookt-client.jar <server add> <port no.>
 
