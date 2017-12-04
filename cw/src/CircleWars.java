@@ -535,6 +535,8 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 								offscreen.getGraphics().drawImage(imgEnemyUp, x, y, 100, 100, this);
 								}
 							*/	
+							BufferedImage grass = ImageIO.read(new File("tanks/grass.png"));
+				       		offscreen.getGraphics().drawImage(grass, 0, 0, 1100, 600, null);
 
 							if(team == 0){ // blue
 							 	if(initPosition<2){
@@ -806,8 +808,8 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		try {
 		       
 		    //use this 
-	       	BufferedImage grass = ImageIO.read(new File("tanks/grass.png"));
-	       	g.drawImage(grass, 0, 0, 1100, 600, this);
+	       	//BufferedImage grass = ImageIO.read(new File("tanks/grass.png"));
+	       	//g.drawImage(grass, 0, 0, 1100, 600, this);
 	       	BufferedImage water = ImageIO.read(new File("tanks/water.jpg"));
 	       	g.drawImage(water, 0, 200, 1100, 200, this);
 	       	
