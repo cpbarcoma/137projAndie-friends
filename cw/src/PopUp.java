@@ -20,7 +20,7 @@ public class PopUp extends JPanel{
 
 	public JPanel getHelpPanel() {
 		this.panel = new JPanel(new BorderLayout());
-		this.panel.setPreferredSize(new Dimension(500, 200));
+		this.panel.setPreferredSize(new Dimension(600, 200));
 
 		instLabel = new JLabel("INSTRUCTIONS", SwingConstants.CENTER);
 		instLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 30));
@@ -72,10 +72,14 @@ public class PopUp extends JPanel{
 			winnerTeam = new JLabel("BLUE TEAM WINS!", SwingConstants.CENTER);
 			winnerTeam.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
 			winnerTeam.setForeground(Color.CYAN);
-		} else { // red
+		} else if (getWinner() == 1){ // red
 			winnerTeam = new JLabel("RED TEAM WINS!", SwingConstants.CENTER);
 			winnerTeam.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
 			winnerTeam.setForeground(Color.RED);
+		} else {
+			winnerTeam = new JLabel("DRAW!", SwingConstants.CENTER);
+			winnerTeam.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
+			winnerTeam.setForeground(Color.WHITE);
 		}
 
 		northPanel.add(endLabel, BorderLayout.NORTH);

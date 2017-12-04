@@ -243,7 +243,7 @@ public class GameServer implements Runnable, Constants{
 
 	public static void main(String args[]){
 		if (args.length != 3){
-			System.out.println("Usage: java -jar circlewars-server <number of players> <number of minutes> <portno>");
+			System.out.println("Usage: java -jar shookt-server <number of players> <number of minutes> <portno>");
 			System.exit(1);
 		}
 
