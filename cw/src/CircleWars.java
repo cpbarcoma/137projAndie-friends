@@ -71,7 +71,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	*/
 	boolean alive=true;
 	int score=0, directionTank=2; //direction tank==2 ay tank na nakaturo upwards
-	int team = 0;//0 ay BLUE team, 1 ay RED team
+	int team;//0 ay BLUE team, 1 ay RED team
 	int health = 10; //
 	int total;
 	int initPosition = 0;
@@ -240,7 +240,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		// frame.addMouseMotionListener(new MouseMotionHandler());
 
 		// add stuff to draw
-		td = new TankDrawing(team);
+		td = new TankDrawing();
 		hook = new Hook();
 
 	
@@ -497,14 +497,14 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 						int initPosition = Integer.parseInt(playerInfo[6]);
 						int health = Integer.parseInt(playerInfo[7].trim());
 
-						// may error sa pagseset ng team sa server
-						total = playersInfo.length;
-						team = i%2;
-						this.team=team;
-						System.out.println("THE CURRENT TEAM: "+team+"| TOTAL: "+total);
-					//draw on the offscreen image
-						//nagdrawing ng oval
-						//offscreen.getGraphics().fillOval(x, y, 20, 20);
+						
+						if(this.name.equals(pname)){
+							System.out.println("Name: "+pname+"|Team:"+i%2);
+						
+							this.team = i%2;
+							team = i % 2;
+						}
+
 						
 						try{
 							/*
@@ -635,48 +635,108 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	}
 
 	public class TankDrawing {
-		int team;
+
 		BufferedImage imgUp;
         BufferedImage imgDown;
         BufferedImage imgLeft;
         BufferedImage imgRight;
 
-		public TankDrawing(int team){
-			this.team = team;
-		}
+        BufferedImage imgEnemyUp;
+        BufferedImage imgEnemyDown;
+        BufferedImage imgEnemyLeft;
+        BufferedImage imgEnemyRight;
+
+        BufferedImage green;
+        BufferedImage blue;
+        BufferedImage red;
 
 		public void render(Graphics g) {
 			try {
-				if(this.team == 0){
-					imgUp = ImageIO.read(new File("tanks/tankEnemyDown.png"));
-			        imgDown = ImageIO.read(new File("tanks/tankEnemyDown.png"));
-			        imgLeft = ImageIO.read(new File("tanks/tankEnemyLeft.png"));
-			        imgRight = ImageIO.read(new File("tanks/tankEnemyRight.png"));	
-				}
-				else if(this.team == 1){
-					imgUp = ImageIO.read(new File("tanks/tankRu.png"));
-			        imgDown = ImageIO.read(new File("tanks/tankRu.png"));
-			        imgLeft = ImageIO.read(new File("tanks/tankLeft.png"));
-			        imgRight = ImageIO.read(new File("tanks/tankRight.png"));
-				}
-				
-				switch (directionTank) {		
-				case 1:				
-					g.drawImage(imgDown, x, y, 100, 100, null);
-					break;
 
-				case 2:
-					g.drawImage(imgUp, x, y, 100, 100, null);
-					break;
-				
-				case 3:
-					g.drawImage(imgLeft, x, y, 100, 100, null);
-					break;
+				green = ImageIO.read(new File("tanks/fullLife.gif"));
+				blue = ImageIO.read(new File("tanks/2Life.gif"));
+				red = ImageIO.read(new File("tanks/3Life.gif"));
 
-				case 4:
-					g.drawImage(imgRight, x, y, 100, 100, null);
-					break;
+
+				imgEnemyUp = ImageIO.read(new File("tanks/tankEnemyDown.png"));
+		        imgEnemyDown = ImageIO.read(new File("tanks/tankEnemyDown.png"));
+		        imgEnemyLeft = ImageIO.read(new File("tanks/tankEnemyLeft.png"));
+		        imgEnemyRight = ImageIO.read(new File("tanks/tankEnemyRight.png"));	
+			
+				imgUp = ImageIO.read(new File("tanks/tankRu.png"));
+		        imgDown = ImageIO.read(new File("tanks/tankRu.png"));
+		        imgLeft = ImageIO.read(new File("tanks/tankLeft.png"));
+		        imgRight = ImageIO.read(new File("tanks/tankRight.png"));
+				
+				
+				if(team == 0){ // blue
+				 	if(initPosition<2){
+				 	x = 100;
+				 	y = 80;
+				 	}
+
+					if(directionTank==1){				
+						g.drawImage(imgEnemyDown, x, y, 100, 100, null);
+						}
+
+					if(directionTank==2){				
+						g.drawImage(imgEnemyDown, x, y, 100, 100, null);
+						}
+					
+					if(directionTank==3){
+						g.drawImage(imgEnemyLeft, x, y, 100, 100, null);
+						}
+
+					if(directionTank==4){
+						g.drawImage(imgEnemyRight, x, y, 100, 100, null);
+						}
+				
+				} else if(team==1){
+					if(initPosition<2){
+							x = 900;
+						y = 400;
+						}
+					if(directionTank==1){				
+						g.drawImage(imgUp, x, y, 100, 100, null);
+					}
+					if(directionTank==2){				
+						g.drawImage(imgUp, x, y, 100, 100, null);
+						}
+					
+					if(directionTank==3){
+						g.drawImage(imgLeft, x, y, 100, 100, null);
+						}
+
+					if(directionTank==4){
+						g.drawImage(imgRight, x, y, 100, 100, null);
+						}
 				}
+
+				if(health >= 7 && health <= 10){			
+					g.drawImage(green, x, y+100, 96, 12, null);
+					}
+				
+				if(health >= 4 && health <= 6){
+					g.drawImage(blue, x, y+100, 62, 12, null);
+					}
+
+				if(health >= 1 && health <= 3){
+					g.drawImage(red, x, y+100, 30, 12, null);
+					}
+			//Draws the health bars
+				
+
+				//String Print 
+				String healthState="Health: ";
+				String scoreState="Score ";
+				healthState+=health;
+				scoreState+=score;
+
+
+				g.drawString(pname,x-40,y+45);
+				g.drawString(healthState,x-55,y+65);
+				g.drawString(scoreState,x-49,y+85);
+				
 			} catch(Exception e){}
 		}
 	}
