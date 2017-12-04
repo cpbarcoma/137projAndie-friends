@@ -1,6 +1,4 @@
 # 137projAndie-friends
-cmsc 137 proj
-
 CMSC 137
 CD-4L
 
@@ -12,8 +10,8 @@ Villador, Marvin Jerald F.
 
 How to compile jar files: 
 javac *.java
-jar cvfe circlewars-server.jar GameServer *.class && jar cvfe circlewars-client.jar CircleWars *.class
+jar cvfe shookt-server.jar GameServer *.class && jar cvfe shookt-client.jar Shookt *.class
 
 How to run: 
-Server side: java -jar circlewars-server.jar <number of players> <number of game minutes> <port no.>
-Client side: java -jar circlewars-client.jar <IP Address of server> <port no.>
+Server side: java -jar shookt-server.jar <number of players> <number of game minutes> <port no.>
+Client side: java -jar shookt-client.jar <IP Address of server> <port no.>
