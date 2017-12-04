@@ -143,7 +143,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	JPanel southPanel;
 	// Temporary solution: Buttons or pure text
 	BasicArrowButton[] instBtn = new BasicArrowButton[4];
-	JLabel instMove, instShoot;
+	JLabel instMove, instShoot, instChat;
     
     // Used to randomly generate a "name"
     Random rand = new Random();
@@ -402,12 +402,15 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		instMove.setForeground(Color.WHITE);
 		instShoot = new JLabel("SHOOT: /");
 		instShoot.setForeground(Color.WHITE);
+		instChat = new JLabel("CHAT: SPACEBAR");
+		instChat.setForeground(Color.WHITE);
 
 		sp.add(instMove);
 		for (int i=0; i<4; i++) {
 			sp.add(instBtn[i]);
 		}
 		sp.add(instShoot);
+		sp.add(instChat);
 
 		sp.setBackground(new Color(52, 56, 63));
 		return sp; //WAHHHHH
@@ -960,7 +963,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 				canShoot = false;
 				break;
 			case KeyEvent.VK_RIGHT:
-				if(x < 1050 && isShooting = false){
+				if(x < 1050 && isShooting == false){
 					x+=xspeed;
 				}
 
