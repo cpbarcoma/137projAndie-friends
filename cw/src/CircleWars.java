@@ -105,7 +105,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	/**
 	 * Server to connect to
 	 */
-	String server="localhost";
+	String server="";
 
 	/**
 	 * Flag to indicate whether this player has connected or not
@@ -195,10 +195,11 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		chatPanel.setLayout(new BorderLayout());
 		sendChat = new JButton("SEND");
 		chatTextField = new JTextField(10);
-		chatArea = new JTextArea(33, 20);	//to adjust sizes in chat
+		chatArea = new JTextArea(33, 20);	//to adjust sizes in chat //33, 20
+		//chatArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		chatScrollPane = new JScrollPane(chatArea);
 
-		//button listener
+		//button listener for send
 		sendChat.addActionListener(new ActionListener() { 
 	  		public void actionPerformed(ActionEvent e) { 
 				th.sendChatData(chatTextField.getText()+"\n");				
@@ -230,6 +231,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		//frame.setAlwaysOnTop(true);
 		frame.setVisible(true);
 		frame.requestFocus();
+		frame.addKeyListener(pressTab());
 		
 		//create the buffer
 		offscreen=(BufferedImage)this.createImage(1100, 600);
@@ -263,6 +265,26 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 				//System.out.println(chatTextField.getText());				
 				th.sendChatData(chatTextField.getText()+"\n");				
 				chatTextField.setText("");
+				frame.requestFocus();
+			}
+		}
+		@Override
+		public void keyTyped(KeyEvent e){}
+		@Override
+		public void keyReleased(KeyEvent e){}
+
+		};
+		return actionPerformed;
+	}
+
+	//keylistener for SPACE button
+	//set focus on chat
+	private KeyListener pressTab(){
+	KeyListener actionPerformed = new KeyListener(){
+		@Override
+		public void keyPressed(KeyEvent e){
+			if(e.getKeyCode() == KeyEvent.VK_SPACE){			
+				chatTextField.requestFocus();
 			}
 		}
 		@Override
