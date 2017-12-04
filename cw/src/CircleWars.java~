@@ -192,11 +192,20 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 
 		chatPanel = new JPanel();
 		chatPanel.setLayout(new BorderLayout());
-		sendChat = new JButton("send");
+		sendChat = new JButton("SEND");
 		chatTextField = new JTextField(10);
-		chatArea = new JTextArea(30, 20);
+		chatArea = new JTextArea(33, 20);	//to adjust sizes in chat
 		chatScrollPane = new JScrollPane(chatArea);
 
+		//button listener
+		sendChat.addActionListener(new ActionListener() { 
+	  		public void actionPerformed(ActionEvent e) { 
+				th.sendChatData(chatTextField.getText()+"\n");				
+				chatTextField.setText("");
+	  		} 
+		} );
+
+		//always set chat to bottom scroll
 		chatScrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {  
        		public void adjustmentValueChanged(AdjustmentEvent e) {  
            		e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
@@ -244,6 +253,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		t.start();
 	}
 
+	//keylistener for Enter button
 	private KeyListener sendViaEnter(){
 	KeyListener actionPerformed = new KeyListener(){
 		@Override
@@ -261,8 +271,9 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 
 		};
 		return actionPerformed;
-
 	}
+
+	
 
 	// set up North panel
 	public JPanel setupNorth(JPanel np) {

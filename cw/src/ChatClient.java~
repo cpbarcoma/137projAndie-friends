@@ -85,7 +85,6 @@ public class ChatClient extends Thread{
 
 	private static void showMessage(String msg){
 		chatArea.append(msg);
-
 	}
 
 

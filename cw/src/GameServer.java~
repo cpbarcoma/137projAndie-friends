@@ -225,7 +225,7 @@ public class GameServer implements Runnable, Constants{
 						  player.setInit(initPosition);
 						  player.setTeam(team);
 						  if (player.getHealth() > health){
-						  	System.out.println("============== U GOT DAMAGE ==============");
+						  	System.out.println("============== U GOT DAMAGED ==============");
 						  }
 						  player.setHealth(health);
 
@@ -247,7 +247,7 @@ public class GameServer implements Runnable, Constants{
 			System.exit(1);
 		}
 
-		Thread t = new ChatServer(Integer.parseInt(args[3]));
+		Thread t = new ChatServer(Integer.parseInt(args[2]));
 		t.start();
 		
 		new GameServer(Integer.parseInt(args[0]), Float.parseFloat(args[1]));
