@@ -1,6 +1,6 @@
 # 137projAndie-friends
 CMSC 137 <br />
-CD-4L <br /><br />
+CD-4L <br />
 
 Contributors: <br />
 Barcoma, Christopher P. <br />
