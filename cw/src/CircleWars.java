@@ -69,12 +69,15 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	/*
 	new specs for tank
 	*/
+	boolean canShoot = true;
 	boolean alive=true;
 	int score=0, directionTank=2; //direction tank==2 ay tank na nakaturo upwards
 	int team;//0 ay BLUE team, 1 ay RED team
 	int health = 10; //
 	int total;
 	int initPosition = 0;
+	
+
 	/*
 	if(team==0){
 	int x=500,y=400;
@@ -136,13 +139,15 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 	JTextArea chatArea;
 	JScrollPane chatScrollPane;
 	JLabel redScore, blueScore, timeRem;
-	String redScoreTxt, blueScoreTxt, timeRemTxt, origTime;
+	int redScoreTxt, blueScoreTxt;
+	String timeRemTxt, origTime;
+	int blueCount, redCount;
 
 	// South panel elements
 	JPanel southPanel;
 	// Temporary solution: Buttons or pure text
 	BasicArrowButton[] instBtn = new BasicArrowButton[4];
-	JLabel instMove, instShoot;
+	JLabel instMove, instShoot, instChat;
     
     // Used to randomly generate a "name"
     Random rand = new Random();
@@ -181,7 +186,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		//Some gui stuff i hate.
 		frame.getContentPane().add(this);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		frame.setSize(1100, 600);
+		frame.setSize(1200, 600);
 
 		// Set up additional UI elements
 		northPanel = new JPanel(new GridLayout(1, 3));
@@ -228,6 +233,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		this.add(southPanel, BorderLayout.SOUTH);
 
 		//frame.setAlwaysOnTop(true);
+		frame.setBackground(new Color(22, 84, 17));
 		frame.setVisible(true);
 		frame.requestFocus();
 		frame.addKeyListener(pressTab());
@@ -261,7 +267,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		@Override
 		public void keyPressed(KeyEvent e){
 			if(e.getKeyCode() == KeyEvent.VK_ENTER){
-				//System.out.println(chatTextField.getText());				
+				System.out.println(chatTextField.getText());				
 				th.sendChatData(chatTextField.getText()+"\n");				
 				chatTextField.setText("");
 				frame.requestFocus();
@@ -299,8 +305,8 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 
 	// set up North panel
 	public JPanel setupNorth(JPanel np) {
-		redScoreTxt = "0";
-		blueScoreTxt = "0";
+		redScoreTxt = 0;
+		blueScoreTxt = 0;
 		timeRemTxt = "";
 		PopUp helpPanel = new PopUp();
 
@@ -401,12 +407,15 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		instMove.setForeground(Color.WHITE);
 		instShoot = new JLabel("SHOOT: /");
 		instShoot.setForeground(Color.WHITE);
+		instChat = new JLabel("CHAT: SPACEBAR");
+		instChat.setForeground(Color.WHITE);
 
 		sp.add(instMove);
 		for (int i=0; i<4; i++) {
 			sp.add(instBtn[i]);
 		}
 		sp.add(instShoot);
+		sp.add(instChat);
 
 		sp.setBackground(new Color(52, 56, 63));
 		return sp; //WAHHHHH
@@ -451,7 +460,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 			serverData=serverData.trim();
 			
 			if (!serverData.equals("")){
-				System.out.println("Server Data:" +serverData);
+				// System.out.println("Server Data:" +serverData);
 			}
 
 			// Check timer
@@ -473,10 +482,10 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 			//Study the following kids. 
 			if (!connected && serverData.startsWith("CONNECTED")){
 				connected=true;
-				System.out.println("Connected.");
+				// System.out.println("Connected.");
 			}else if (!connected){
 				
-				System.out.println("Connecting..");				
+				// System.out.println("Connecting..");				
 				send("CONNECT "+name);
 			}else if (connected){
 				
@@ -499,8 +508,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 
 						
 						if(this.name.equals(pname)){
-							System.out.println("Name: "+pname+"|Team:"+i%2);
-						
+							// System.out.println("Name: "+pname+"|Team:"+i%2);
 							this.team = i%2;
 							team = i % 2;
 						}
@@ -527,6 +535,8 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 					        BufferedImage blue = ImageIO.read(new File("tanks/2Life.gif"));
 					        BufferedImage red = ImageIO.read(new File("tanks/3Life.gif"));
 
+					        // BufferedImage grass = ImageIO.read(new File("tanks/grass.png"));
+	       					// offscreen.getGraphics().drawImage(grass, 0, 0, 1100, 600, this);
 					        // BufferedImage water = ImageIO.read(new File("tanks/water.jpg"));
 	       					// offscreen.getGraphics().drawImage(water, 0, 200, 1100, 200, this);
 
@@ -535,8 +545,41 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 								offscreen.getGraphics().drawImage(imgEnemyUp, x, y, 100, 100, this);
 								}
 							*/	
-							BufferedImage grass = ImageIO.read(new File("tanks/grass.png"));
-				       		offscreen.getGraphics().drawImage(grass, 0, 0, 1100, 600, null);
+
+
+						if(Float.parseFloat(timeRemTxt) == 0) {
+							if (team==0){ //if blue team
+								blueCount++;
+
+								if(health>0){//counts the dead
+									this.blueCount--;
+								}
+							}else{
+							if (team==1){
+								redCount++;
+								if(health>0){
+									this.redCount++;
+								}
+							}
+							}
+
+							if(blueCount==0){
+								blueScoreTxt=redCount;
+							}
+							else if(redCount==0){
+								redScoreTxt=blueCount;
+							}else{
+								System.out.println("Draw");
+							}
+
+						}	
+
+
+
+
+
+						//	BufferedImage grass = ImageIO.read(new File("tanks/grass.png"));
+				       	//	offscreen.getGraphics().drawImage(grass, 0, 0, 1100, 600, null);
 
 							if(team == 0){ // blue
 							 	if(initPosition<2){
@@ -584,6 +627,9 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 
 							
 							//DRAWs the health bars	
+							if (this.name.equals(pname) && initPosition > 1) {
+								this.health = health;
+							}
 							if(health >= 7 && health <= 10){			
 								offscreen.getGraphics().drawImage(green, x, y+100, 96, 12, this);
 								}
@@ -595,8 +641,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 							if(health >= 1 && health <= 3){
 								offscreen.getGraphics().drawImage(red, x, y+100, 30, 12, this);
 								}
-							//Draws the health bars
-								
+							//Draws the health bars	
 
 								//String Print 
 								String healthState="Health: ";
@@ -609,7 +654,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 								offscreen.getGraphics().drawString(healthState,x-55,y+65);
 								offscreen.getGraphics().drawString(scoreState,x-49,y+85);
 								
-								System.out.println("Player: "+pname+" Team: "+team+" i:"+i);
+								// System.out.println("Player: "+pname+" Team: "+team+" i:"+i);
 
 							 } catch (Exception ex){
 						   ex.printStackTrace();
@@ -617,7 +662,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 					
 					}
 
-					System.out.println("===================================");
+					// System.out.println("===================================");
 
 					//show the changes
 					frame.repaint();
@@ -628,7 +673,21 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 
 	public void showEndGamePopUp() {
 		PopUp endGame = new PopUp();
-		endGame.setWinner(1); // FIX: Should get actual winner
+		if(blueCount==0){
+		blueScoreTxt=redCount;
+		endGame.setWinner(0); // FIXed: get actual winner
+		
+		}
+		else if(redCount==0){
+			redScoreTxt=blueCount;
+			endGame.setWinner(1); // FIXed: get actual winner
+		
+		}else{
+			endGame.setWinner(2); //draw
+		}
+
+
+
 		endGame.setPlayers(playersInfo);
 		JOptionPane.showMessageDialog(frame,
 			endGame.getEndPanel(),
@@ -753,14 +812,24 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		}
 
 		// side to side
-		public void xset(int x, int y) {
+		public void xsetRed(int x, int y) {
 			this.x += x;
 			this.y = y-20;
 		}
 
-		public void xreverse(int x, int y) {
+		public void xreverseRed(int x, int y) {
 			this.x -= x;
 			this.y = y-20;
+		}
+
+		public void xsetBlue(int x, int y) {
+			this.x += x;
+			this.y = y+20;
+		}
+
+		public void xreverseBlue(int x, int y) {
+			this.x -= x;
+			this.y = y+20;
 		}
 
 		// shooting mode
@@ -807,9 +876,6 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 		g.drawImage(offscreen, 0, 0, null);
 		try {
 		       
-		    //use this 
-	       	//BufferedImage grass = ImageIO.read(new File("tanks/grass.png"));
-	       	//g.drawImage(grass, 0, 0, 1100, 600, this);
 	       	BufferedImage water = ImageIO.read(new File("tanks/water.jpg"));
 	       	g.drawImage(water, 0, 200, 1100, 200, this);
 	       	
@@ -828,7 +894,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 							while(hook.getx() < x+90) {
 								try {
 									if (isShooting == true) break;
-									hook.xset(1, y);
+									hook.xsetRed(1, y);
 									hook.render(g); // invokes paintComponent() again
 									Thread.sleep(200);
 								} catch(Exception e) {  }
@@ -838,7 +904,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 							while(hook.getx() > x) {
 								try {
 									if (isShooting == true) break;
-									hook.xreverse(1, y);
+									hook.xreverseRed(1, y);
 									hook.render(g); // invokes paintComponent() again
 									Thread.sleep(200);
 								} catch(Exception e) {  }
@@ -871,9 +937,10 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 								if (hook.getx() >= x
 									&& hook.getx() <= x+100 
 									&& hook.gety() >= y
-									&& hook.gety() <= y+100) {
+									&& hook.gety() <= y+100
+									&& !name.equals(pname)) {
 									health -=1;
-									System.out.println("YOU JUST SHOOKT " + pname);
+									// System.out.println("YOU JUST SHOOKT " + pname);
 								}
 								send("PLAYER "+pname+" "+x+" "+y+" "+directionTank+" "+team+" "+initPosition+" "+health);
 							}
@@ -888,19 +955,20 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 							}
 							hook.setYReverse(false);
 							isShooting = false;
+							canShoot = true;
 						}
 					}
 				}
 
 
 				else if (team == 0) { // for blue team, who shoots downwards
-					int orig = y+100;
+					int orig = y+110;
 					if (isShooting == false) {
 						if (hook.getXReverse() == false) {
 							while(hook.getx() < x+90) {
 								try {
 									if (isShooting == true) break;
-									hook.xset(1, orig);
+									hook.xsetBlue(1, orig);
 									hook.render(g); // invokes paintComponent() again
 									Thread.sleep(200);
 								} catch(Exception e) {  }
@@ -910,7 +978,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 							while(hook.getx() > x) {
 								try {
 									if (isShooting == true) break;
-									hook.xreverse(1, orig);
+									hook.xreverseBlue(1, orig);
 									hook.render(g); // invokes paintComponent() again
 									Thread.sleep(200);
 								} catch(Exception e) {  }
@@ -943,9 +1011,10 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 								if (hook.getx() >= x
 									&& hook.getx() <= x+100 
 									&& hook.gety() >= orig
-									&& hook.gety() <= orig+300) {
+									&& hook.gety() <= orig+300
+									&& !name.equals(pname)) {
 									health -=1;
-									System.out.println("YOU JUST SHOOKT " + pname);
+									// System.out.println("YOU JUST SHOOKT " + pname);
 								}
 								send("PLAYER "+pname+" "+x+" "+y+" "+directionTank+" "+team+" "+initPosition+" "+health);
 							}
@@ -960,6 +1029,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 							}
 							hook.setYReverse(false);
 							isShooting = false;
+							canShoot = true;
 						}
 					}
 				}
@@ -977,12 +1047,12 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 			if(initPosition==0 && team==0){
 				x = 100;
 				y = 80;
-				System.out.println("team 1x: "+x+" y: "+y);
+				// System.out.println("team 1x: "+x+" y: "+y);
 			}
 			if(initPosition==0 && team==1){
 				x = 900;
 				y = 400;
-				System.out.println("team2 x: "+x+" y: "+y);
+				// System.out.println("team2 x: "+x+" y: "+y);
 			}
 
 			prevX=x;prevY=y;
@@ -1010,25 +1080,27 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 				directionTank=2;
 				break;
 			case KeyEvent.VK_LEFT:
-				if(x > 0){
+				if(x > 0 && isShooting == false){
 					x-=xspeed;
 				}
 
 				initPosition+=1;
 				directionTank=3;
+				canShoot = false;
 				break;
 			case KeyEvent.VK_RIGHT:
-				if(x < 1050){
+				if(x < 1050 && isShooting == false){
 					x+=xspeed;
 				}
 
 				initPosition+=1;
 				directionTank=4;
+				canShoot = false;
 				break;
 
 			// Temporary shoot button
 			case KeyEvent.VK_SLASH:
-				System.out.println("FIRE FIRE FIRE FIRE");
+				// System.out.println("FIRE FIRE FIRE FIRE");
 				isShooting = true;
 				break;
 			}
@@ -1043,7 +1115,7 @@ public class CircleWars extends JPanel implements Runnable, Constants{
 
 	public static void main(String args[]) throws Exception{
 		if (args.length != 2){
-			System.out.println("Usage: java -jar circlewars-client <server> <portno>");
+			// System.out.println("Usage: java -jar circlewars-client <server> <portno>");
 			System.exit(1);
 		}
 

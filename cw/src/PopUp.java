@@ -30,8 +30,9 @@ public class PopUp extends JPanel{
 		instructions = new JTextArea(
 			"1. Move your character around using the arrow keys on your keyboard.\n\n" +
 			"2. You cannot cross the river.\n\n" +
-			"3. Shookt the other team's players by using the [ / ] button.\n\n" +
-			"4. The team that has the highest kills when time runs out wins the game!",
+			"3. Shookt the other team's players by using the SLASH button.\n\n" +
+			"4. The team that has the highest kills when time runs out wins the game!\n\n" +
+			"5. Press SPACEBAR to chat with other players. Press ENTER to send your message.",
 			10, 28);
 		instructions.setLineWrap(true);
 		instructions.setFont(new Font(Font.DIALOG, Font.BOLD, 12));
